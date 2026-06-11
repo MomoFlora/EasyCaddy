@@ -152,7 +152,7 @@ jobs:
           echo "version=${latest_go}" >> $GITHUB_OUTPUT
 
       - name: ⚙️ 安装 Go 环境
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ steps.go_version.outputs.version }}
 
@@ -219,7 +219,7 @@ jobs:
           echo "BUILD_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')" >> $GITHUB_ENV
 
       - name: 📦 发布产物至 GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.2.1
         with:
           token: ${{ github.token }}
           tag_name: ${{ env.TAG }}
