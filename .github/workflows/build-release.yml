@@ -1,0 +1,254 @@
+name: Build releases
+
+on:
+  schedule:
+    - cron: "0 3,20 * * *" # 每天北京时间 11:00 和 04:00 自动检测更新
+  workflow_dispatch: # 支持手动一键无感触发
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  # =================================================================
+  # 1. 检查更新状态
+  # =================================================================
+  check:
+    name: 🔍 检查官方最新版本
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.getversion.outputs.tag }}
+      ver: ${{ steps.getversion.outputs.ver }}
+      triggered: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: 🌐 获取最新 Tag
+        id: getversion
+        run: |
+          echo "========================================================="
+          echo "▶️ 开始请求 GitHub API 获取版本信息..."
+          echo "========================================================="
+          
+          ver=$(curl -sL https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.tag_name // ""')
+          tag=$(curl -sL https://api.github.com/repos/caddyserver/caddy/releases/latest | jq -r '.tag_name // ""')
+          
+          if [[ -z "$tag" || "$tag" == "null" ]]; then
+            echo "❌ 错误: 无法获取 Caddy 官方最新版本号，请检查网络或 API 限制。"
+            exit 1
+          fi
+          
+          echo "💡 官方最新版本号: ${tag}"
+          echo "💡 当前仓库最新版本: ${ver}"
+          echo "========================================================="
+          
+          echo "tag=${tag}" >> $GITHUB_OUTPUT
+          echo "ver=${ver}" >> $GITHUB_OUTPUT
+          
+      - name: 🧹 清理历史工作流记录
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          retain_days: 1
+          keep_minimum_runs: 3
+      
+  # =================================================================
+  # 2. 多架构矩阵编译与发布
+  # =================================================================
+  build: 
+    name: 🛠️ 编译架构 [${{ matrix.TARGET }}]
+    needs: check
+    if: ${{ needs.check.outputs.triggered == 'true' || (needs.check.outputs.tag != needs.check.outputs.ver) }}
+    runs-on: ${{ matrix.OS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TARGET: amd64
+            OS: ubuntu-latest
+            ARCH: amd64
+            OOS: linux
+            
+          - TARGET: arm64
+            OS: ubuntu-latest
+            ARCH: arm64
+            OOS: linux
+            
+          - TARGET: mips
+            OS: ubuntu-latest
+            SOFT: softfloat
+            ARCH: mips
+            OOS: linux
+            
+          - TARGET: mips64
+            OS: ubuntu-latest
+            SOFT: softfloat
+            ARCH: mips64
+            OOS: linux
+            
+          - TARGET: mips64le
+            OS: ubuntu-latest
+            SOFT: softfloat
+            ARCH: mips64le
+            OOS: linux
+            
+          - TARGET: mipsel
+            OS: ubuntu-latest
+            SOFT: softfloat
+            ARCH: mipsle
+            OOS: linux
+            
+          - TARGET: ppc64le
+            OS: ubuntu-latest
+            ARCH: ppc64le
+            OOS: linux
+
+          - TARGET: s390x
+            OS: ubuntu-latest
+            ARCH: s390x
+            OOS: linux
+            
+          - TARGET: armv5
+            OS: ubuntu-latest
+            ARM: 5
+            ARCH: arm
+            OOS: linux
+            
+          - TARGET: armv6
+            OS: ubuntu-latest
+            ARM: 6
+            ARCH: arm
+            OOS: linux
+
+          - TARGET: armv7
+            OS: ubuntu-latest
+            ARM: 7
+            ARCH: arm
+            OOS: linux
+
+          - TARGET: freebsd-x86-64
+            OS: ubuntu-latest
+            ARCH: amd64
+            OOS: freebsd
+            
+    env:
+      TAG: ${{ needs.check.outputs.tag }}
+      TARGET: ${{ matrix.TARGET }}
+      OOS: ${{ matrix.OOS }}
+      SOFT: ${{ matrix.SOFT }}
+      ARM: ${{ matrix.ARM }}
+      ARCH: ${{ matrix.ARCH }}
+      
+    steps:
+      - name: 📂 检查代码仓库
+        uses: actions/checkout@v4
+
+      - name: 🐹 动态获取最新 Go 版本
+        id: go_version
+        run: |
+          latest_go=$(curl -sL https://golang.org/dl/?mode=json | jq -r '.[0].version' | sed 's/go//')
+          echo "📦 检测到当前最新 Go 版本: go${latest_go}"
+          echo "version=${latest_go}" >> $GITHUB_OUTPUT
+
+      - name: ⚙️ 安装 Go 环境
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ steps.go_version.outputs.version }}
+
+      - name: 🗜️ 安装 UPX 压缩工具
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          version: v4.2.4
+          install-only: true
+          
+      - name: 🧪 源码准备与功能魔改
+        run: |
+          echo "========================================================="
+          echo "▶️ 开始安装 xcaddy 核心工具..."
+          go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+          
+          echo "▶️ 开始克隆 Caddy 官方源码 [${{ env.TAG }}]..."
+          git clone -b ${{ env.TAG }} https://github.com/caddyserver/caddy /opt/mycaddy
+          
+          echo "▶️ 开始下载并替换自定义 browse.html..."
+          curl -sLko /opt/browse.html https://github.com/lmq8267/caddy/raw/refs/heads/main/browse.html
+          cp -rf /opt/browse.html /opt/mycaddy/modules/caddyhttp/fileserver/browse.html
+          
+          echo "▶️ 开始执行源码参数优化与去耦微调..."
+          sed -i 's/caddy\.Log().Warn("failed to set GOMAXPROCS", zap.Error(err))/runtime.GOMAXPROCS(4)/g' /opt/mycaddy/cmd/main.go
+          sed -i 's/full += " " + module.Sum/full = module.Version/g' /opt/mycaddy/caddy.go
+          sed -i 's/full += " => " + module.Replace.Path/full = module.Version/g' /opt/mycaddy/caddy.go
+          sed -i 's/simple = module.Replace.Version + "_custom"/simple = module.Version/g' /opt/mycaddy/caddy.go
+          sed -i 's/full += "@" + module.Replace.Version/full = module.Version/g' /opt/mycaddy/caddy.go
+          sed -i 's/full += " " + module.Replace.Sum/full = module.Version/g' /opt/mycaddy/caddy.go
+          echo "✅ 源码前置修改全部完成！"
+          echo "========================================================="
+          
+      - name: 🔨 执行多架构编译
+        run: |
+          echo "========================================================="
+          echo "▶️ 正在初始化编译目录与系统时区..."
+          mkdir -p /opt/caddy && cd /opt/caddy
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          
+          echo "▶️ 开始交叉编译目标架构: GOOS=${{ env.OOS }} GOARCH=${{ env.ARCH }}"
+          GOOS=${{ env.OOS }} GOARCH=${{ env.ARCH }} GOMIPS=${{ env.SOFT }} GOARM=${{ env.ARM }} xcaddy build \
+            --with github.com/caddyserver/caddy/v2=/opt/mycaddy \
+            --with github.com/mholt/caddy-webdav \
+            --with github.com/aksdb/caddy-cgi/v2 \
+            --with github.com/abiosoft/caddy-exec
+            
+          echo "========================================================="
+          echo "📊 原始编译文件基本信息:"
+          file caddy
+          du -h caddy
+          mv caddy caddy-${{ env.TARGET }}
+          echo "========================================================="
+          
+          # 针对特定兼容架构执行 UPX 固件高强度压缩
+          if [[ "${{ env.TARGET }}" != "mips64" && "${{ env.TARGET }}" != "mips64le" && "${{ env.TARGET }}" != "s390x" && "${{ env.TARGET }}" != "freebsd-x86-64" ]]; then
+            echo "▶️ 检测到目标架构符合压缩条件，启动 UPX 深度压缩..."
+            cp caddy-${{ env.TARGET }} caddy-${{ env.TARGET }}-upx
+            upx --lzma --best caddy-${{ env.TARGET }}-upx
+            echo "📊 压缩后文件体积:"
+            du -h caddy-${{ env.TARGET }}-upx
+            echo "========================================================="
+          fi
+          
+          echo "BUILD_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: 📦 发布产物至 GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ github.token }}
+          tag_name: ${{ env.TAG }}
+          body: |
+            ## 📥 Caddy 多架构自编译固件发布
+
+            > 📌 **编译完成时间**：`${{ env.BUILD_TIME }}`
+            > 🏷️ **集成内核版本**：`${{ env.TAG }}`
+
+            ---
+
+            ### 💡 文件说明
+            - 带 `-upx` 后缀的固件为经过 **UPX (LZMA)** 深度压缩版，体积更小，特别适合路由器等闪存敏感型嵌入式设备。
+            - 常规无后缀固件为原生编译版，执行效率最佳。
+
+            ### 🧩 本版集成扩展插件列表
+            1. 📁 **[caddy-webdav](https://github.com/mholt/caddy-webdav)** - 全功能 WebDAV 服务端原生支持
+            2. ⚙️ **[caddy-cgi](https://github.com/aksdb/caddy-cgi/v2)** - 传统 CGI 脚本/网关协议互联
+            3. 🚀 **[caddy-exec](https://github.com/abiosoft/caddy-exec)** - 在特定的 Caddy 路由生命周期内一键执行外部系统指令
+
+            ---
+
+            #### 🔍 运维实用小贴士
+            您可以在下载固件后，通过在终端执行以下命令来快速复核已打包集成的模块：
+            ```bash
+            ./caddy list-modules -s
+            ```
+
+            📬 *有关于内核更迭的详细改动细节，请参阅 [Caddy 官方发布日志](https://github.com/caddyserver/caddy/releases)。*
+          files: |
+            /opt/caddy/caddy-${{ env.TARGET }}
+            /opt/caddy/caddy-${{ env.TARGET }}-upx
