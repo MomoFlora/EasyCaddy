@@ -237,109 +237,41 @@ jobs:
           echo "========================================================="
           echo "▶️ 开始构建 DEB 安装包 (架构: ${{ env.DEB_ARCH }})..."
           echo "========================================================="
-          
+
           VER="${{ env.TAG }}"
           VER_CLEAN="${VER#v}"
           PKG_DIR="/opt/caddy/deb-pkg"
-          
+          WORKSPACE="${{ github.workspace }}"
+
           # ---------- 创建 DEB 目录结构 ----------
           mkdir -p "${PKG_DIR}/DEBIAN"
           mkdir -p "${PKG_DIR}/usr/bin"
           mkdir -p "${PKG_DIR}/etc/caddy"
           mkdir -p "${PKG_DIR}/lib/systemd/system"
-          
+          mkdir -p "${PKG_DIR}/usr/lib/sysusers.d"
+          mkdir -p "${PKG_DIR}/usr/share/caddy"
+
           # ---------- 拷贝 caddy 二进制 ----------
           cp /opt/caddy/caddy-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
           chmod 755 "${PKG_DIR}/usr/bin/caddy"
-          
-          # ---------- 创建默认 Caddyfile ----------
-          cat > "${PKG_DIR}/etc/caddy/Caddyfile" << 'CADDYFILE_EOF'
-          # The Caddyfile is an easy way to configure your Caddy web server.
-          # See https://caddyserver.com/docs/caddyfile for full documentation.
-          
-          :80 {
-          	root * /var/www/html
-          	file_server
-          }
-          CADDYFILE_EOF
-          
-          # ---------- 创建 caddy.service ----------
-          cat > "${PKG_DIR}/lib/systemd/system/caddy.service" << 'SERVICE_EOF'
-          [Unit]
-          Description=Caddy
-          Documentation=https://caddyserver.com/docs/
-          After=network.target network-online.target
-          Requires=network-online.target
-          
-          [Service]
-          Type=notify
-          User=caddy
-          Group=caddy
-          ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile
-          ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile --force
-          TimeoutStopSec=5s
-          LimitNOFILE=1048576
-          PrivateTmp=true
-          ProtectSystem=full
-          AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-          
-          [Install]
-          WantedBy=multi-user.target
-          SERVICE_EOF
-          
-          # ---------- 创建 postinst 安装后脚本 ----------
-          cat > "${PKG_DIR}/DEBIAN/postinst" << 'POSTINST_EOF'
-          #!/bin/sh
-          set -e
-          
-          # 创建 caddy 系统用户和组（如果不存在）
-          if ! getent group caddy >/dev/null 2>&1; then
-              addgroup --system --quiet caddy
-          fi
-          if ! getent passwd caddy >/dev/null 2>&1; then
-              adduser --system --quiet \
-                  --ingroup caddy \
-                  --home /var/lib/caddy \
-                  --no-create-home \
-                  --disabled-password \
-                  caddy
-          fi
-          
-          # 确保必要目录存在且权限正确
-          mkdir -p /var/www/html /var/lib/caddy
-          chown -R caddy:caddy /var/lib/caddy /var/www/html 2>/dev/null || true
-          
-          # 重载 systemd 并启用服务（不立即启动，由用户自行管理）
-          if command -v systemctl >/dev/null 2>&1; then
-              systemctl daemon-reload 2>/dev/null || true
-          fi
-          
-          echo ""
-          echo "=============================================="
-          echo "  Caddy 安装完成！"
-          echo ""
-          echo "  启动服务:  systemctl start caddy"
-          echo "  开机自启:  systemctl enable caddy"
-          echo "  查看状态:  systemctl status caddy"
-          echo ""
-          echo "  配置文件:  /etc/caddy/Caddyfile"
-          echo "  网页根目录: /var/www/html"
-          echo "=============================================="
-          echo ""
-          POSTINST_EOF
-          chmod 755 "${PKG_DIR}/DEBIAN/postinst"
-          
-          # ---------- 创建 prerm 卸载前脚本 ----------
-          cat > "${PKG_DIR}/DEBIAN/prerm" << 'PRERM_EOF'
-          #!/bin/sh
-          set -e
-          if command -v systemctl >/dev/null 2>&1; then
-              systemctl stop caddy 2>/dev/null || true
-              systemctl disable caddy 2>/dev/null || true
-          fi
-          PRERM_EOF
-          chmod 755 "${PKG_DIR}/DEBIAN/prerm"
-          
+
+          # ---------- 从仓库拷贝配置文件 ----------
+          cp "${WORKSPACE}/Caddy/Caddyfile"            "${PKG_DIR}/etc/caddy/Caddyfile"
+          cp "${WORKSPACE}/Caddy/caddy.service"        "${PKG_DIR}/lib/systemd/system/caddy.service"
+          cp "${WORKSPACE}/Caddy/caddy-api.service"    "${PKG_DIR}/lib/systemd/system/caddy-api.service"
+          cp "${WORKSPACE}/Caddy/caddy.sysusers"       "${PKG_DIR}/usr/lib/sysusers.d/caddy.conf"
+          cp "${WORKSPACE}/Caddy/index.html"           "${PKG_DIR}/usr/share/caddy/index.html"
+
+          echo "✅ 已从仓库拷贝配置文件: Caddyfile, caddy.service, caddy-api.service, caddy.sysusers, index.html"
+
+          # ---------- 从仓库拷贝安装/卸载脚本 ----------
+          cp "${WORKSPACE}/Scripts/postinstall.sh"     "${PKG_DIR}/DEBIAN/postinst"
+          cp "${WORKSPACE}/Scripts/preremove.sh"       "${PKG_DIR}/DEBIAN/prerm"
+          cp "${WORKSPACE}/Scripts/postremove.sh"      "${PKG_DIR}/DEBIAN/postrm"
+          chmod 755 "${PKG_DIR}/DEBIAN/postinst" "${PKG_DIR}/DEBIAN/prerm" "${PKG_DIR}/DEBIAN/postrm"
+
+          echo "✅ 已从仓库拷贝脚本: postinst, prerm, postrm"
+
           # ---------- 创建 control 控制文件 ----------
           cat > "${PKG_DIR}/DEBIAN/control" << EOF
           Package: caddy
@@ -358,7 +290,7 @@ jobs:
             - caddy-cgi: CGI support for Caddy
             - caddy-exec: Run external commands from Caddy
           EOF
-          
+
           # ---------- 使用 dpkg-deb 打包 ----------
           DEB_NAME="caddy-${VER_CLEAN}-${{ env.DEB_ARCH }}.deb"
           dpkg-deb --build "${PKG_DIR}" "/opt/caddy/${DEB_NAME}"
