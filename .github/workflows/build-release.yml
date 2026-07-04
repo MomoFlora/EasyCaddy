@@ -155,7 +155,7 @@ jobs:
       
     steps:
       - name: 📂 检查代码仓库
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 🐹 动态获取最新 Go 版本
         id: go_version
@@ -170,7 +170,7 @@ jobs:
           go-version: ${{ steps.go_version.outputs.version }}
 
       - name: 🗜️ 安装 UPX 压缩工具
-        uses: crazy-max/ghaction-upx@v3
+        uses: crazy-max/ghaction-upx@v4
         with:
           version: v4.2.4
           install-only: true
@@ -311,7 +311,7 @@ jobs:
           echo "DEB_NAME=${DEB_NAME}" >> $GITHUB_ENV
 
       - name: 📦 发布产物至 GitHub Release
-        uses: softprops/action-gh-release@v2.2.1
+        uses: softprops/action-gh-release@v3.0.1
         with:
           token: ${{ github.token }}
           tag_name: ${{ env.TAG }}
