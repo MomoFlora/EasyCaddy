@@ -185,7 +185,7 @@ jobs:
           git clone -b ${{ env.TAG }} https://github.com/caddyserver/caddy /opt/mycaddy
           
           echo "▶️ 开始下载并替换自定义 browse.html..."
-          curl -sLko /opt/browse.html https://github.com/lmq8267/caddy/raw/refs/heads/main/browse.html
+          curl -sLko /opt/browse.html https://github.com/MomoFlora/EasyCaddy/raw/refs/heads/master/Caddy/browse.html
           cp -rf /opt/browse.html /opt/mycaddy/modules/caddyhttp/fileserver/browse.html
           
           echo "▶️ 开始执行源码参数优化与去耦微调..."
