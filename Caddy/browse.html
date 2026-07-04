@@ -1,0 +1,2700 @@
+{{- define "icon"}}
+	{{- if .IsDir}}
+		{{- if .IsSymlink}}
+		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-folder-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+			<path d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" stroke-width="0" fill="currentColor"/>
+			<path fill="#000" d="M2.795 17.306c0-2.374 1.792-4.314 4.078-4.538v-1.104a.38.38 0 0 1 .651-.272l2.45 2.492a.132.132 0 0 1 0 .188l-2.45 2.492a.381.381 0 0 1-.651-.272V15.24c-1.889.297-3.436 1.39-3.817 3.26a2.809 2.809 0 0 1-.261-1.193Z" stroke-width=".127478"/>
+		</svg>
+		{{- else}}
+		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-folder-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+			<path d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" stroke-width="0" fill="currentColor"/>
+		</svg>
+		{{- end}}
+	{{- else if or (eq .Name "LICENSE") (eq .Name "README")}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-license" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11"/>
+		<path d="M9 7l4 0"/>
+		<path d="M9 11l4 0"/>
+	</svg>
+	{{- else if .HasExt ".jpg" ".jpeg" ".png" ".gif" ".webp" ".tiff" ".bmp" ".heif" ".heic" ".svg"}}
+		{{- if eq .Tpl.Layout "grid"}}
+		<img loading="lazy" src="{{.Name | pathEscape}}">
+		{{- else}}
+		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-photo" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+			<path d="M15 8h.01"/>
+			<path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/>
+			<path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/>
+			<path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/>
+		</svg>
+		{{- end}}
+	{{- else if .HasExt ".mp4" ".mov" ".m4v" ".mpeg" ".mpg" ".avi" ".ogg" ".webm" ".mkv" ".vob" ".gifv" ".3gp"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-movie" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/>
+		<path d="M8 4l0 16"/>
+		<path d="M16 4l0 16"/>
+		<path d="M4 8l4 0"/>
+		<path d="M4 16l4 0"/>
+		<path d="M4 12l16 0"/>
+		<path d="M16 8l4 0"/>
+		<path d="M16 16l4 0"/>
+	</svg>
+	{{- else if .HasExt ".mp3" ".m4a" ".aac" ".ogg" ".flac" ".wav" ".wma" ".midi" ".cda"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-music" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M6 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
+		<path d="M16 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
+		<path d="M9 17l0 -13l10 0l0 13"/>
+		<path d="M9 8l10 0"/>
+	</svg>
+	{{- else if .HasExt ".pdf"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-pdf" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/>
+		<path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6"/>
+		<path d="M17 18h2"/>
+		<path d="M20 15h-3v6"/>
+		<path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z"/>
+	</svg>
+	{{- else if .HasExt ".csv" ".tsv"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-csv" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/>
+		<path d="M7 16.5a1.5 1.5 0 0 0 -3 0v3a1.5 1.5 0 0 0 3 0"/>
+		<path d="M10 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75"/>
+		<path d="M16 15l2 6l2 -6"/>
+	</svg>
+	{{- else if .HasExt ".txt" ".doc" ".docx" ".odt" ".fodt" ".rtf"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
+		<path d="M9 9l1 0"/>
+		<path d="M9 13l6 0"/>
+		<path d="M9 17l6 0"/>
+	</svg>
+	{{- else if .HasExt ".xls" ".xlsx" ".ods" ".fods"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-spreadsheet" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
+		<path d="M8 11h8v7h-8z"/>
+		<path d="M8 15h8"/>
+		<path d="M11 11v7"/>
+	</svg>
+	{{- else if .HasExt ".ppt" ".pptx" ".odp" ".fodp"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-presentation-analytics" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M9 12v-4"/>
+		<path d="M15 12v-2"/>
+		<path d="M12 12v-1"/>
+		<path d="M3 4h18"/>
+		<path d="M4 4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10"/>
+		<path d="M12 16v4"/>
+		<path d="M9 20h6"/>
+	</svg>
+	{{- else if .HasExt ".zip" ".gz" ".xz" ".tar" ".7z" ".rar" ".xz" ".zst"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-zip" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M6 20.735a2 2 0 0 1 -1 -1.735v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-1"/>
+		<path d="M11 17a2 2 0 0 1 2 2v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-2a2 2 0 0 1 2 -2z"/>
+		<path d="M11 5l-1 0"/>
+		<path d="M13 7l-1 0"/>
+		<path d="M11 9l-1 0"/>
+		<path d="M13 11l-1 0"/>
+		<path d="M11 13l-1 0"/>
+		<path d="M13 15l-1 0"/>
+	</svg>
+	{{- else if .HasExt ".deb" ".dpkg"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-debian" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M12 17c-2.397 -.943 -4 -3.153 -4 -5.635c0 -2.19 1.039 -3.14 1.604 -3.595c2.646 -2.133 6.396 -.27 6.396 3.23c0 2.5 -2.905 2.121 -3.5 1.5c-.595 -.621 -1 -1.5 -.5 -2.5"/>
+		<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+	</svg>
+	{{- else if .HasExt ".rpm" ".exe" ".flatpak" ".appimage" ".jar" ".msi" ".apk"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-package" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/>
+		<path d="M12 12l8 -4.5"/>
+		<path d="M12 12l0 9"/>
+		<path d="M12 12l-8 -4.5"/>
+		<path d="M16 5.25l-8 4.5"/>
+	</svg>
+	{{- else if .HasExt ".ps1"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-powershell" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M4.887 20h11.868c.893 0 1.664 -.665 1.847 -1.592l2.358 -12c.212 -1.081 -.442 -2.14 -1.462 -2.366a1.784 1.784 0 0 0 -.385 -.042h-11.868c-.893 0 -1.664 .665 -1.847 1.592l-2.358 12c-.212 1.081 .442 2.14 1.462 2.366c.127 .028 .256 .042 .385 .042z"/>
+		<path d="M9 8l4 4l-6 4"/>
+		<path d="M12 16h3"/>
+	</svg>
+	{{- else if .HasExt ".py" ".pyc" ".pyo"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-python" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M12 9h-7a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h3"/>
+		<path d="M12 15h7a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-3"/>
+		<path d="M8 9v-4a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v5a2 2 0 0 1 -2 2h-4a2 2 0 0 0 -2 2v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2 -2v-4"/>
+		<path d="M11 6l0 .01"/>
+		<path d="M13 18l0 .01"/>
+	</svg>
+	{{- else if .HasExt ".bash" ".sh" ".com" ".bat" ".dll" ".so"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-script" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M17 20h-11a3 3 0 0 1 0 -6h11a3 3 0 0 0 0 6h1a3 3 0 0 0 3 -3v-11a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v8"/>
+	</svg>
+	{{- else if .HasExt ".dmg"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-finder" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M3 4m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/>
+		<path d="M7 8v1"/>
+		<path d="M17 8v1"/>
+		<path d="M12.5 4c-.654 1.486 -1.26 3.443 -1.5 9h2.5c-.19 2.867 .094 5.024 .5 7"/>
+		<path d="M7 15.5c3.667 2 6.333 2 10 0"/>
+	</svg>
+	{{- else if .HasExt ".iso" ".img"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-disc" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+		<path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+		<path d="M7 12a5 5 0 0 1 5 -5"/>
+		<path d="M12 17a5 5 0 0 0 5 -5"/>
+	</svg>
+	{{- else if .HasExt ".md" ".mdown" ".markdown"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-markdown" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/>
+		<path d="M7 15v-6l2 2l2 -2v6"/>
+		<path d="M14 13l2 2l2 -2m-2 2v-6"/>
+	</svg>
+	{{- else if .HasExt ".ttf" ".otf" ".woff" ".woff2" ".eof"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-typography" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
+		<path d="M11 18h2"/>
+		<path d="M12 18v-7"/>
+		<path d="M9 12v-1h6v1"/>
+	</svg>
+	{{- else if .HasExt ".go"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-golang" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M15.695 14.305c1.061 1.06 2.953 .888 4.226 -.384c1.272 -1.273 1.444 -3.165 .384 -4.226c-1.061 -1.06 -2.953 -.888 -4.226 .384c-1.272 1.273 -1.444 3.165 -.384 4.226z"/>
+		<path d="M12.68 9.233c-1.084 -.497 -2.545 -.191 -3.591 .846c-1.284 1.273 -1.457 3.165 -.388 4.226c1.07 1.06 2.978 .888 4.261 -.384a3.669 3.669 0 0 0 1.038 -1.921h-2.427"/>
+		<path d="M5.5 15h-1.5"/>
+		<path d="M6 9h-2"/>
+		<path d="M5 12h-3"/>
+	</svg>
+	{{- else if .HasExt ".html" ".htm"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-html" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/>
+		<path d="M2 21v-6"/>
+		<path d="M5 15v6"/>
+		<path d="M2 18h3"/>
+		<path d="M20 15v6h2"/>
+		<path d="M13 21v-6l2 3l2 -3v6"/>
+		<path d="M7.5 15h3"/>
+		<path d="M9 15v6"/>
+	</svg>
+	{{- else if .HasExt ".js"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-js" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M3 15h3v4.5a1.5 1.5 0 0 1 -3 0"/>
+		<path d="M9 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-1"/>
+	</svg>
+	{{- else if .HasExt ".css"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-css" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/>
+		<path d="M8 16.5a1.5 1.5 0 0 0 -3 0v3a1.5 1.5 0 0 0 3 0"/>
+		<path d="M11 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75"/>
+		<path d="M17 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75"/>
+	</svg>
+	{{- else if .HasExt ".json" ".json5" ".jsonc"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-json" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M20 16v-8l3 8v-8"/>
+		<path d="M15 8a2 2 0 0 1 2 2v4a2 2 0 1 1 -4 0v-4a2 2 0 0 1 2 -2z"/>
+		<path d="M1 8h3v6.5a1.5 1.5 0 0 1 -3 0v-.5"/>
+		<path d="M7 15a1 1 0 0 0 1 1h1a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1h1a1 1 0 0 1 1 1"/>
+	</svg>
+	{{- else if .HasExt ".ts"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-ts" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-1"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M9 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75"/>
+		<path d="M3.5 15h3"/>
+		<path d="M5 15v6"/>
+	</svg>
+	{{- else if .HasExt ".sql"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-type-sql" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+		<path d="M5 20.25c0 .414 .336 .75 .75 .75h1.25a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h1.25a.75 .75 0 0 1 .75 .75"/>
+		<path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/>
+		<path d="M18 15v6h2"/>
+		<path d="M13 15a2 2 0 0 1 2 2v2a2 2 0 1 1 -4 0v-2a2 2 0 0 1 2 -2z"/>
+		<path d="M14 20l1.5 1.5"/>
+	</svg>
+	{{- else if .HasExt ".db" ".sqlite" ".bak" ".mdb"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-database" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M12 6m-8 0a8 3 0 1 0 16 0a8 3 0 1 0 -16 0"/>
+		<path d="M4 6v6a8 3 0 0 0 16 0v-6"/>
+		<path d="M4 12v6a8 3 0 0 0 16 0v-6"/>
+	</svg>
+	{{- else if .HasExt ".eml" ".email" ".mailbox" ".mbox" ".msg"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"/>
+		<path d="M3 7l9 6l9 -6"/>
+	</svg>
+	{{- else if .HasExt ".crt" ".pem" ".x509" ".cer" ".ca-bundle"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-certificate" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M15 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
+		<path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5"/>
+		<path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73"/>
+		<path d="M6 9l12 0"/>
+		<path d="M6 12l3 0"/>
+		<path d="M6 15l2 0"/>
+	</svg>
+	{{- else if .HasExt ".key" ".keystore" ".jks" ".p12" ".pfx" ".pub"}}
+	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-key" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+		<path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"/>
+		<path d="M15 9h.01"/>
+	</svg>
+	{{- else}}
+		{{- if .IsSymlink}}
+		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-symlink" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+			<path d="M4 21v-4a3 3 0 0 1 3 -3h5"/>
+			<path d="M9 17l3 -3l-3 -3"/>
+			<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+			<path d="M5 11v-6a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-9.5"/>
+		</svg>
+		{{- else}}
+		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+			<path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+			<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
+		</svg>
+		{{- end}}
+	{{- end}}
+{{- end}}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{html .Name}}</title>
+		<link rel="canonical" href="{{.Path}}/"  />
+		<meta charset="utf-8">
+		<meta name="color-scheme" content="light dark">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css" integrity="sha512-Ya9H+OPj8NgcQk34nCrbehaA0atbzGdZCI2uCbqVRELgnlrh8vQ2INMnkadVMSniC54HChLIh5htabVuKJww8g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.1.3/marked.min.js"></script>
+<style>
+/* Atelier-Estuary Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #b5a5ba;
+}
+
+/* Atelier-Estuary Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attribute,
+.hljs-tag,
+.hljs-name,
+.hljs-regexp,
+.hljs-link,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #ba6236;
+}
+
+/* Atelier-Estuary Orange */
+.hljs-number,
+.hljs-meta,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params {
+  color: #ae7313;
+}
+
+/* Atelier-Estuary Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet {
+  color: #7d9726;
+}
+
+/* Atelier-Estuary Blue */
+.hljs-title,
+.hljs-section {
+  color: #36a166;
+}
+
+/* Atelier-Estuary Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #5f9182;
+}
+
+/* Additions and Deletions */
+.hljs-deletion,
+.hljs-addition {
+  color: #22221b;
+  display: inline-block;
+  width: 100%;
+}
+
+.hljs-deletion {
+  background-color: #ba6236;
+}
+
+.hljs-addition {
+  background-color: #7d9726;
+}
+
+/* Base Styles */
+.hljs.day {
+  display: block;
+  overflow-x: auto;
+  background: #f4f3ec;
+  color: #5f5e4e;
+  padding: 0.5em;
+}
+.hljs.night {
+  display: block;
+  overflow-x: auto;
+  background: #f4f3ec;
+  color: #717376;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+a:hover {
+	font-size: 1.1em;
+	letter-spacing: 2px;
+	color: #ff00ff;
+}
+
+* { padding: 0; margin: 0; box-sizing: border-box; }
+
+body {
+	font-family: Inter, system-ui, sans-serif;
+	font-size: 16px;
+	text-rendering: optimizespeed;
+	background-color: #f3f6f7;
+	min-height: 100vh;
+}
+
+img,
+svg {
+	vertical-align: middle;
+	z-index: 1;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+	border-radius: 5px;
+}
+
+td img {
+	max-width: 1.5em;
+	max-height: 2em;
+	object-fit: cover;
+}
+
+body,
+a,
+svg,
+.layout.current,
+.layout.current svg,
+.go-up {
+	color: #333;
+	text-decoration: none;
+}
+
+a {
+	color: #0064c9;
+}
+
+.wrapper {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+header,
+.meta {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+header .wrapper {
+	padding-bottom: 0;
+}
+
+td a {
+	color: #006ed3;
+	text-decoration: none;
+}
+
+div.entry a.nowPlaying,
+tr.file td>a.nowPlaying {
+	color: #ee9a00 !important;
+}
+
+tr.file td>a.nowPlaying::before {
+	content: '‣';
+}
+
+div.entry a.nowPlaying::after {
+	content: '🔊';
+}
+
+td a:hover {
+	color: #0095e4;
+}
+
+td a:visited {
+	color: #800080;
+}
+
+td a:visited:hover {
+	color: #b900b9;
+}
+
+th:first-child,
+td:first-child {
+	width: 5%;
+}
+
+th:last-child,
+td:last-child {
+	width: 5%;
+}
+
+.size,
+.timestamp {
+	font-size: 14px;
+}
+
+.grid .size {
+	font-size: 12px;
+	margin-top: .5em;
+	color: #496a84;
+}
+
+header {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 10%);
+}
+
+.breadcrumbs {
+	text-transform: uppercase;
+	font-size: 10px;
+	letter-spacing: 1px;
+	color: #939393;
+	margin-bottom: 5px;
+	padding-left: 3px;
+}
+
+h1 {
+	font-size: 20px;
+	font-family: Poppins, system-ui, sans-serif;
+	font-weight: normal;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	color: #c5c5c5;
+	display: inline-block;
+	max-width: 100%;
+}
+
+h1 a,
+th a {
+	color: #000;
+}
+
+h1 a {
+	padding: 0 3px;
+	margin: 0 1px;
+}
+
+h1 a:hover {
+	background: #ffffc4;
+}
+
+h1 a:first-child {
+	margin: 0;
+}
+
+h2.info {
+	padding: 20px 0 20px 0;
+}
+
+header,
+main {
+	background-color: white;
+}
+
+main {
+	margin: 3em auto 0;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px 1px rgb(0 0 0 / 5%);
+}
+
+.meta {
+	display: flex;
+	gap: 1em;
+	font-size: 14px;
+	border-bottom: 1px solid #e5e9ea;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+#summary {
+	display: flex;
+	gap: 1em;
+	align-items: center;
+	margin-right: auto;
+}
+
+.filter-container {
+	position: relative;
+	display: inline-block;
+	margin-left: 1em;
+}
+
+#search-icon {
+	color: #777;
+	position: absolute;
+	height: 1em;
+	top: .6em;
+	left: .5em;
+}
+
+#filter {
+	padding: .5em 1em .5em 2.5em;
+	border: none;
+	border: 1px solid #CCC;
+	border-radius: 5px;
+	font-family: inherit;
+	position: relative;
+	z-index: 2;
+	background: none;
+}
+
+.layout,
+.layout svg {
+	color: #9a9a9a;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+tbody tr,
+tbody tr a,
+.entry a {
+	transition: all .15s;
+}
+
+tbody tr:hover,
+.grid .entry a:hover {
+	background-color: #f4f9fd;
+}
+
+th,
+td {
+	text-align: left;
+}
+
+th {
+	position: sticky;
+	top: 0;
+	background: white;
+	white-space: nowrap;
+	z-index: 2;
+	text-transform: uppercase;
+	font-size: 14px;
+	letter-spacing: 1px;
+	padding: .75em 0;
+}
+
+th.offset {
+	top: 24px;
+}
+
+td {
+	white-space: nowrap;
+}
+
+td:nth-child(2) {
+	width: 75%;
+}
+
+td:nth-child(2) a {
+	padding: 1em 0;
+	display: block;
+}
+
+td:nth-child(3),
+th:nth-child(3) {
+	padding: 0 20px 0 20px;
+	min-width: 150px;
+}
+
+td .go-up {
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.name,
+.go-up {
+	word-break: break-all;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+}
+
+.listing .icon-tabler {
+	color: #454545;
+}
+
+.listing .icon-tabler-folder-filled {
+	color: #ffb900 !important;
+}
+
+.sizebar {
+	position: relative;
+	padding: 0.25rem 0.5rem;
+	display: flex;
+}
+
+.sizebar-bar {
+	background-color: #dbeeff;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 0;
+	height: 100%;
+	pointer-events: none;
+}
+
+.sizebar-text {
+	position: relative;
+	z-index: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
+	gap: 2px;
+}
+
+.grid .entry {
+	position: relative;
+	width: 100%;
+}
+
+.grid .entry a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5em;
+	height: 100%;
+}
+
+.grid .entry svg {
+	width: 75px;
+	height: 75px;
+}
+
+.grid .entry img {
+	max-height: 200px;
+	object-fit: cover;
+}
+
+.grid .entry .name {
+	margin-top: 1em;
+}
+
+footer {
+	padding: 40px 20px;
+	font-size: 12px;
+	text-align: center;
+}
+
+.caddy-logo {
+	display: inline-block;
+	height: 2.5em;
+	margin: 0 auto;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	z-index: 42;
+	display: none;
+}
+
+.popup,
+#popup1.day .popup,
+#popup1.night .popup {
+	margin: 3em auto;
+	padding: 0 1px 20px 1px;
+	border-radius: 5px;
+	width: 90%;
+	height: 90%;
+	position: relative;
+	transition: all 0.25s ease-in-out;
+	overflow: hidden;
+}
+
+.popup .content {
+	height: 92% !important;
+}
+
+#popup1.day .popup {
+	background: #fff;
+}
+
+#popup1.night .popup {
+	background: #000;
+}
+
+.popup h2 {
+	margin-top: 0;
+	color: #a19f9f;
+	font-family: sans-serif;
+	font-size: small;
+	text-align: center;
+}
+
+.popup .copy {
+	position: absolute;
+	top: 10px;
+	right: 100px;
+	transition: all 200ms;
+	font-weight: bold;
+	text-decoration: none;
+	z-index: 1000;
+	font-size: 17px;
+}
+.popup .hidden {
+    	display: none;
+}
+.popup .copy.disabled {
+    	cursor: not-allowed;
+    	background-color: #999;
+   	pointer-events: none;
+}
+	
+.popup .download {
+	position: absolute;
+	top: 10px;
+	right: 70px;
+	transition: all 200ms;
+	font-weight: bold;
+	text-decoration: none;
+	z-index: 1000;
+}
+	
+.popup .max {
+	position: absolute;
+	top: 10px;
+	right: 40px;
+	transition: all 200ms;
+	font-weight: bold;
+	text-decoration: none;
+	z-index: 1000;
+}
+
+.popup .close {
+	position: absolute;
+	top: -1px;
+	right: 10px;
+	transition: all 200ms;
+	font-weight: bold;
+	text-decoration: none;
+	z-index: 1000;
+	font-size: 30px;
+}
+
+.popup .copy:hover, .popup .download:hover, .popup .max:hover, .popup .close:hover {
+	color: #06D85F;
+}
+
+.popup .copy:hover::after {
+    	content: "复制"; 
+    	position: absolute;
+    	top: 25px;
+    	right: 0;
+    	font-size: 10px;
+    	background-color: rgba(0, 0, 0, 0.7);
+    	color: white; 
+    	padding: 5px 10px;
+    	border-radius: 5px;
+    	opacity: 1;
+    	white-space: nowrap;
+    	transition: opacity 0.3s ease-in-out; 
+}
+.popup .download:hover::after {
+    	content: "下载"; 
+    	position: absolute;
+    	top: 25px;
+    	right: 0;
+    	font-size: 10px;
+    	background-color: rgba(0, 0, 0, 0.7);
+    	color: white; 
+    	padding: 5px 10px;
+    	border-radius: 5px;
+    	opacity: 1;
+    	white-space: nowrap;
+    	transition: opacity 0.3s ease-in-out; 
+}
+.popup .max:hover::after {
+    	content: "缩放"; 
+    	position: absolute;
+    	top: 25px;
+    	right: 0;
+    	font-size: 10px;
+    	background-color: rgba(0, 0, 0, 0.7);
+    	color: white; 
+    	padding: 5px 10px;
+    	border-radius: 5px;
+    	opacity: 1;
+    	white-space: nowrap;
+    	transition: opacity 0.3s ease-in-out; 
+}
+.popup .close:hover::after {
+    	content: "关闭"; 
+    	position: absolute;
+    	top: 35px;
+    	right: 0;
+    	font-size: 10px;
+    	background-color: rgba(0, 0, 0, 0.7);
+    	color: white; 
+    	padding: 5px 10px;
+    	border-radius: 5px;
+    	opacity: 1;
+    	white-space: nowrap;
+    	transition: opacity 0.3s ease-in-out; 
+}
+.popup .copy::after, .popup .download::after, .popup .max::after, .popup .close::after {
+    	content: "";
+    	opacity: 0; 
+    	transition: opacity 0.3s ease-in-out;
+}
+
+#popup1 .content {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+#popup1 .content > img {
+	max-width: none;
+	max-height: 80vh;
+	margin: auto;
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%; 
+	transform: translate(-50%, -50%);
+	cursor: pointer;
+	transition: transform 0.1s ease;
+	transform-origin: center center;
+	pointer-events: auto;
+}
+
+#popup1.day .popup .close, 
+#popup1.day .popup .download, 
+#popup1.day .popup .max {
+	color: #333;
+}
+
+#popup1.night .popup .close, 
+#popup1.night .popup .download, 
+#popup1.night .popup .max {
+	color: #e1e0e0;
+}
+
+.popup .content {
+	height: 100%;
+	overflow: auto;
+}
+
+#popup1.night .popup {
+	background-color: black;
+}
+
+#popup1.day .popup {
+	background-color: white;
+}
+
+video {
+	max-width: 100%;
+	max-height: 100%;
+	width: 100%;
+	margin: auto;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+video::cue {
+	color: #ffffff;
+	border: 3px solid black;
+	text-align: center;
+	text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5), 2px 2px 3px rgba(206,89,55,0);
+	font-size: 1.5vw;
+}
+
+.fixedplayer {
+	display: none;
+	text-align: center;
+	background: #f1f3f4;
+	position: fixed;
+	min-width: 67vw;
+	width: 100%;
+	height: 24px;
+	padding: 0;
+	top: 0;
+	right: 0;
+	left:0;
+	z-index: 3;
+}
+
+.fixedplayer #aplayer{
+	width: 432px;
+	height: 24px;
+}
+
+.fixedplayer a {
+	position: absolute;
+	top: 2px;
+	transition: all 200ms;
+	font-weight: bold;
+	text-decoration: none;
+	z-index: 1000;
+	color: #939393;
+}
+.fixedplayer a:hover {
+	color: #f5c400;
+}
+
+
+/* prevent body scroll when modal is shown */
+.modal-open {
+	touch-action: none;
+	-webkit-overflow-scrolling: none;
+	overflow: hidden;
+	overscroll-behavior: none;
+	overflow-x: hidden;
+	overflow-y: scroll !important;
+	position: fixed;
+	width: 100%;
+}
+
+.maximized {
+	width: 100% !important;
+	height: 100% !important;
+	margin: auto !important;
+}
+
+/* markdown styling */
+.content {
+	padding: 0 1em 0 1em;
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+	color: black;
+}
+
+.content h1,
+.content h2,
+.content h3 {
+	margin: 1em 0 1em 0;
+}
+
+.content p {
+	margin: 0.5em 0 0.5em 0;
+}
+
+.content ul {
+	margin: 1em 0 1em 0;
+}
+
+/* 强制统一字体、字体大小和行距 */
+.content code,
+.content pre,
+.line-numbers {
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.content code {
+    border-radius: 5px;
+    background-color: #f4f3ec;
+    padding: 0.25em;
+}
+
+.content pre {
+    border-radius: 5px;
+    padding: 1em;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    background-color: #f4f3ec;
+    overflow: auto;
+    box-sizing: border-box;
+    padding-left: calc(4ch + 10px);
+}
+
+.content pre code {
+    padding: 0;
+}
+
+.code-wrapper {
+    position: relative;
+    overflow: hidden;
+    min-height: 100px;
+    height: 100%;
+}
+
+.line-numbers {
+    padding-top: 1em;
+    padding-bottom: 1em; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    padding-right: 10px;
+    border-right: 1px solid #ccc;
+    white-space: pre;
+    user-select: none;
+    color: #888;
+    height: calc(100% - 1em);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+	
+.content a {
+	color: #006ed3;
+}
+
+@media (max-width: 600px) {
+	.hideable {
+		display: none;
+	}
+
+	td:nth-child(2) {
+		width: auto;
+	}
+
+	th:nth-child(3),
+	td:nth-child(3) {
+		padding-right: 5%;
+		text-align: right;
+	}
+
+	h1 {
+		color: #000;
+	}
+
+	h1 a {
+		margin: 0;
+	}
+
+	#filter {
+		max-width: 100px;
+	}
+
+	.grid .entry {
+		max-width: initial;
+	}
+
+	.popup {
+		width: 100%;
+		height: 100%;
+		margin: auto;
+	}
+	.popup a.copy {
+		font-size: 25px;
+		top: 12px;
+		left: 10px;
+		right: unset;
+	}
+	.popup .copy:hover::after {
+		top: 35px;
+		left: 0;
+		right: unset;
+	}
+	.popup a.max {
+		font-size: 25px;
+		right: 48px;
+	}
+	.popup .max:hover::after {
+		top: 35px;
+	}
+	.popup a.download {
+		font-size: 25px;
+		top: 11px;
+		left: 48px;
+		right: unset;
+	}
+	.popup .download:hover::after {
+		top: 35px;
+		left: 0;
+		right: unset;
+	}
+	.popup a.close {
+		font-size: 40px;
+	}
+	.popup .close:hover::after {
+		top: 45px;
+	}
+	.line-numbers {
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	.content pre {
+		font-size: 14px;
+		line-height: 1.5;
+		margin: 0;
+		padding-bottom: 1em;
+	}
+
+	.code-wrapper {
+		overflow: hidden;
+		display: flex;
+	}
+
+	.content pre, .line-numbers {
+		font-family: monospace;
+	}
+    	.content code:empty::before {
+        content: "\00A0";
+        display: inline-block;
+    }
+
+}
+
+@media (prefers-color-scheme: dark) {
+	html {
+		background: black; /* overscroll */
+	}
+
+	body {
+		background: linear-gradient(180deg, rgb(34 50 66) 0%, rgb(26 31 38) 100%);
+		background-attachment: fixed;
+	}
+
+	body,
+	a,
+	svg,
+	.layout.current,
+	.layout.current svg,
+	.go-up {
+		color: #ccc;
+	}
+
+	h1 a,
+	th a {
+		color: white;
+	}
+
+	h1 {
+		color: white;
+	}
+
+	h1 a:hover {
+		background: hsl(213deg 100% 73% / 20%);
+	}
+
+	header,
+	main,
+	.grid .entry {
+		background-color: #101720;
+	}
+
+	.popup {
+		background-color: #171b1f !important;
+	}
+
+	.popup .download, .popup .max, .popup .close {
+		color: #888 !important;
+	}
+
+	.popup .download:hover, .popup .max:hover, .popup .close:hover {
+		color: #4f4f4f !important;
+	}
+	
+	tbody tr:hover,
+	.grid .entry a:hover {
+		background-color: #162030;
+		color: #fff;
+	}
+
+	th {
+		background-color: #18212c;
+	}
+
+	td a,
+	.listing .icon-tabler {
+		color: #abc8e3;
+	}
+
+	td a:hover,
+	td a:hover .icon-tabler {
+		color: white;
+	}
+
+	td a:visited {
+		color: #cd53cd;
+	}
+
+	td a:visited:hover {
+		color: #f676f6;
+	}
+
+	#search-icon {
+		color: #7798c4;
+	}
+
+	#filter {
+		color: #ffffff;
+		border: 1px solid #29435c;
+	}
+
+	.meta {
+		border-bottom: 1px solid #222e3b;
+	}
+
+	.sizebar-bar {
+		background-color: #1f3549;
+	}
+
+	.grid .entry a {
+		background-color: #080b0f;
+	}
+
+	#Wordmark path,
+	#R path {
+		fill: #ccc !important;
+	}
+	#R circle {
+		stroke: #ccc !important;
+	}
+	.fixedplayer {
+		background-color: #333;
+	}
+
+	/* markdown styling */
+	.content h1,
+	.content h2,
+	.content h3,
+	.content h4,
+	.content h5,
+	.content h6 {
+		color: white;
+	}
+	.content code,
+	.content pre {
+		background-color: #2c3136;
+	}
+	.content a {
+		color: #006ed3;
+	}
+
+	header a,
+	tr a,
+	div.meta a {
+		text-decoration: none;
+	}
+}
+        .latency {
+            position: fixed; /* 固定位置 */
+            top: 0px; /* 距离顶部10px */
+            right: 0px; /* 距离右边20px */
+            padding: 5px 10px; /* 内边距 */
+            border-radius: 5px; /* 圆角 */
+            font-size: 10px; /* 字体大小 */
+            font-weight: bold; /* 字体加粗 */
+            z-index: 2; /* 设置层叠顺序 */
+            max-width: 30%; /* 最大宽度为30% */
+            word-wrap: break-word; /* 自动换行 */
+        }
+	
+        .latency.green {
+            background-color: transparent; /* 取消背景 */
+    	    color: #28a745; /* 绿色字体 */
+        }
+
+        .latency.orange {
+            background-color: transparent;
+            color: #ffc107; /* 橙色字体 */
+        }
+
+        .latency.red {
+            background-color: transparent; 
+            color: #dc3545; /* 红色字体 */
+        }
+</style>
+<script>
+    (function () {
+        var a_idx = 0;
+        window.onclick = function (event) {
+            var a = new Array("❤富强❤", "❤民主❤", "❤文明❤", "❤和谐❤", "❤自由❤", "❤平等❤", "❤公正❤", "❤法治❤", "❤爱国❤",
+                "❤敬业❤", "❤诚信❤", "❤友善❤");
+ 
+            var heart = document.createElement("b");
+            heart.onselectstart = new Function('event.returnValue=false');
+ 
+            document.body.appendChild(heart).innerHTML = a[a_idx];
+            a_idx = (a_idx + 1) % a.length;
+            heart.style.cssText = "position: fixed;left:-100%;";
+ 
+            var f = 2,
+                x = event.clientX - f / 2,
+                y = event.clientY - f,
+                c = randomColor(),
+                a = 1,
+                s = 0.6;
+ 
+            var timer = setInterval(function () {
+                if (a <= 0) {
+                    document.body.removeChild(heart);
+                    clearInterval(timer);
+                } else {
+                    heart.style.cssText = "font-size:16px;cursor: default;position: fixed;color:" +
+                        c + ";left:" + x + "px;top:" + y + "px;opacity:" + a + ";transform:scale(" +
+                        s + ");";
+ 
+                    y--;
+                    a -= 0.016;
+                    s += 0.002;
+                }
+            }, 15)
+ 
+        }
+        function randomColor() {
+ 
+            return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math
+                .random() * 255)) + ")";
+ 
+        }
+    }());
+</script>
+{{- if eq .Layout "grid"}}
+<style>.wrapper { max-width: none; } main { margin-top: 1px; }</style>
+{{- end}}
+
+<script>
+	function findNextPrevLink(link, regex, isBackwards) {
+		if (!link) {
+			return;
+		}
+		let item = findClosest(link, 'TR', 'file') || findClosest(link, 'DIV', 'entry');
+
+		while(item = isBackwards ? item.previousElementSibling : item.nextElementSibling) {
+			const a = item.querySelector('a');
+
+			if (a && regex.test(a.getAttribute('href'))) {
+				return a;
+			}
+		}
+	}
+
+	// keyboard navigation
+	document.onkeydown = function (e) {
+		const v = document.querySelector('.popup video');
+		const img = document.querySelector('.popup img');
+
+		switch (e.which) {
+			case 27:	// = Escape
+				hideModal();
+				break;
+			case 37: // left
+				if (v){
+					if (!v.paused) {
+						v.pause();
+						v.currentTime = v.currentTime - 5.0;
+						if (v.paused) {
+							v.play();
+						}
+					}
+				} else if (window.currentLink && (img || !v || (v && v.paused && v.currentTime == 0))) {
+					const prev = findNextPrevLink(window.currentLink, REGEX_TYPE_CAN_PREVIEW, true);
+					if (prev) {
+						onLinkClicked(prev);
+					}
+				}
+				break;
+			case 32: // Space
+				if(e.which == 32){
+				// stops default behaviour of space bar. Stop page scrolling down
+					if (v) {
+						e.preventDefault();
+						if (v.paused) {
+							v.play();
+						} else {
+							v.pause();
+						}
+					}
+				}
+				break;
+			case 39: // Right
+				if (v && e.which != 32){
+					if (!v.paused) {
+						v.pause();
+						v.currentTime = v.currentTime + 5.0;
+						if (v.paused) {
+							v.play();
+						}
+					}
+				}
+				if (window.currentLink && (img || !v || (v && v.ended)) ) {
+					const next = findNextPrevLink(window.currentLink, REGEX_TYPE_CAN_PREVIEW);
+					if (next) {
+						onLinkClicked(next);
+					}
+				}
+
+				break;
+			case 70: // f-key
+				if (!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) {
+					if (!window.isFs) {
+						window.isFs = true;
+						fullscreenOn(v || img || document);
+					} else {
+						window.isFs = false;
+						fullscreenOff(v || img || document);
+					}
+				}
+				break;
+		}
+	};
+
+	function fullscreenOn(p) {
+		var fs = p.requestFullscreen || p.webkitRequestFullscreen || p.mozRequestFullScreen || p.oRequestFullscreen || p.msRequestFullscreen;
+		fs.call(p);
+	}
+
+	function fullscreenOff(p) {
+		var fsx = p.exitFullScreen || p.webkitExitFullScreen || p.mozExitFullScreen || p.oExitFullScreen || p.msExitFullScreen;
+		fsx.call(p);
+	}
+
+
+async function loadSubtitle(subUrl) {
+		const url = new URL(subUrl);
+		let src;
+		if (url.pathname.toLowerCase().endsWith(".srt")) {
+		try {
+			const resp = await fetch(subUrl);
+			if (!resp.ok) {
+			throw new Error(`Failed to fetch subtitle from ${subUrl}!`);
+			}
+			const vtt = srtToVttBlob(await resp.text());
+			src = URL.createObjectURL(vtt);
+		} catch (error) {
+			console.error(error);
+		}
+		} else {
+		src = subUrl;
+		}
+
+		return src;
+}
+
+function srtToVttBlob(srtData) {
+	const VTT_HEAD = `WEBVTT
+
+STYLE
+::cue {font-size: 3vw; color:#ffffff; border:3px solid black; text-align:center;text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5), 2px 2px 3px rgba(206,89,55,0)}
+::cue(b) {color: rgb(51, 216, 18); border: 2px solid black;}
+::cue(i) {color: #00bafd;}
+::cue(u) {color: #ff00ee;}
+`;
+	// Replace line breaks with \n
+	let subtitles = srtData.replace(/\r\n|\r|\n/g, "\n");
+	// commas -> dots in timestamps
+	subtitles = subtitles.replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, "$1.$2");
+	// map SRT font colors to VTT cue span classes
+	var colorMap = {};
+
+	// font tags -> ::cue span tags
+	subtitles = subtitles.replace(
+	/<font color="([^"]+)">([\s\S]*?)<\/font>/g,
+	function (_match, color, text) {
+		let key =
+		"c_" + color.replace(/^rgb/, "").replace(/\W/g, "").toLowerCase();
+		colorMap[key] = color;
+		return `<c.${key}>${text.replace("\n", "").trim()}</c>`;
+	}
+	);
+	subtitles = subtitles.replace(/<br\s*\/?>/g, "\n");
+
+	let vttSubtitles = VTT_HEAD;
+
+	if (Object.keys(colorMap).length) {
+	let vttStyles = "";
+
+	for (let cssClass in colorMap) {
+		let color = colorMap[cssClass];
+		// add cue style declaration
+		vttStyles += `::cue(.${cssClass}) {color: ${color};}\n`;
+	}
+	vttSubtitles += vttStyles;
+	}
+	vttSubtitles += "\n"; // an empty line MUST separate styles from subs
+	vttSubtitles += subtitles;
+
+	return new Blob([vttSubtitles], { type: "text/vtt" });
+}
+
+function findClosest(el, tagName, className) {
+	if (el.tagName === tagName && !className || el.classList.contains(className)) {
+		return el;
+	} else if (el.parentElement) {
+		return findClosest(el.parentElement, tagName, className);
+	}
+	return null;
+}
+
+function onDocumentClickHandler(e) {
+	const el = e.target;
+
+	let link = el;
+
+	if (link.tagName !== 'A') {
+		link = findClosest(link, 'A');
+	}
+
+	if (link && (link.matches(".file a, .entry a, h1 a"))) {
+		onLinkClicked(link, e);
+	} else if (!link && !document.querySelector('#popup1 .popup').contains(el)) {
+		hideModal();
+	}
+}
+
+const REGEX_TYPE_AUDIO = /\.(mp3|m4a|aac|flac|ape|wav|ogg|oga|webm)$/i;
+const REGEX_TYPE_VIDEO = /\.(mp4|m4v|avi|mov|mpg|mpeg|ogv|ogm|opus|mkv)$/i;
+const REGEX_TYPE_IMAGE = /\.(gif|jpe?g|a?png|tiff?|bmp|webp|ico|wmf|avif|svg)$/i;
+const REGEX_TYPE_CODE = /\.(asp|txt|memo|kt|go|ics|rst?|rb|dart|php|js|tsx?|py|cue|ipynb|z?sh|xml|plist|bat|css|json|java|c|cpp|h|m|hpp|conf|ini|pl|yaml|yml|groovy|swift|properties|gradle|srt|sql|lua|m3u8|log?)$/i;
+const REGEX_TYPE_MARKDOWN = /\.(md)$/i;
+const REGEX_TYPE_CAN_PREVIEW = /\.(mp4|m4v|avi|mov|mpg|mpeg|ogv|ogm|opus|mkv|md|html?|gif|jpe?g|a?png|tiff?|bmp|webp|ico|wmf|avif|svg|asp|txt|memo|kt|go|ics|rst?|rb|dart|php|js|tsx?|py|cue|ipynb|z?sh|xml|plist|bat|css|json|java|c|cpp|h|m|hpp|conf|ini|pl|yaml|yml|groovy|swift|properties|gradle|srt|sql|lua|m3u8?)$/i;
+
+function escapeRegex(string) {
+	return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
+function showModal (popup, popupThemeClass) {
+	window.lastScrollOffset = window.pageYOffset;
+	document.body.classList.add('modal-open');
+	document.body.style.top = `-${window.lastScrollOffsetllY}px`;
+
+	var popup = popup || document.querySelector('#popup1');
+	popup.style.display = 'block';
+
+	popup.classList.remove(popupThemeClass === 'day' ? 'night' : 'day');
+	popup.classList.add(popupThemeClass);
+	const copyBtn = document.getElementById('copyBtn');
+    	copyBtn.classList.add('hidden');
+}
+
+function hideModal (popup) {
+	var popup = popup || document.querySelector('#popup1');
+	globalCodeContent = '';
+	if (popup.style.display !== 'none') {
+		popup.style.display = 'none';
+		popup.querySelector('.content').innerHTML = '';
+
+		document.body.classList.remove('modal-open');
+
+		if (window.lastScrollOffset){
+			window.scrollTo(0, window.lastScrollOffset);
+		}
+	}
+}
+function toggleRestoreModal (popup) {
+	var popup = popup || document.querySelector('#popup1');
+	if (popup.style.display !== 'none') {
+		popup.querySelector('.popup').classList.toggle('maximized');
+		let content = document.querySelector("#popup1 .content");
+		let img = content.querySelector("img");
+		if (img) {
+			enableImageZoom(img);
+    		}
+	}
+}
+
+let scale = 1; 
+let startDistance = 0; 
+let isDragging = false; 
+let dragStartX = 0, dragStartY = 0; 
+let offsetX = 0, offsetY = 0; 
+
+function enableImageZoom(img) {
+    resetImageScale(img); 
+    let content = img.closest('.content'); 
+    //content.style.overflow = 'hidden'; 
+
+    img.addEventListener("wheel", function(e) {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+            scale += 0.1; 
+        } else {
+            scale -= 0.1; 
+        }
+        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+    });
+
+    img.addEventListener("mousedown", function(e) {
+        e.preventDefault();
+        isDragging = true; 
+        dragStartX = e.clientX - offsetX;
+        dragStartY = e.clientY - offsetY;
+    });
+
+    img.addEventListener("mousemove", function(e) {
+        if (isDragging) {
+            offsetX = e.clientX - dragStartX;
+            offsetY = e.clientY - dragStartY;
+            img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`; 
+        }
+    });
+
+    img.addEventListener("mouseup", function() {
+        isDragging = false; 
+    });
+
+    img.addEventListener("mouseleave", function() {
+        isDragging = false; 
+    });
+
+    img.addEventListener("dblclick", function() {
+        scale = 1; 
+        offsetX = 0;
+        offsetY = 0;
+        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+    });
+
+    img.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+            startDistance = getDistance(e.touches[0], e.touches[1]);
+            e.preventDefault();
+        }
+        if (e.touches.length === 1) {
+            dragStartX = e.touches[0].clientX - offsetX;
+            dragStartY = e.touches[0].clientY - offsetY;
+        }
+    });
+
+    img.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 2) {
+            const distance = getDistance(e.touches[0], e.touches[1]);
+            const scaleChange = distance / startDistance;
+            scale *= scaleChange; 
+            img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+            startDistance = distance; 
+            e.preventDefault();
+        }
+        if (e.touches.length === 1) {
+            offsetX = e.touches[0].clientX - dragStartX;
+            offsetY = e.touches[0].clientY - dragStartY;
+            img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+        }
+    });
+}
+
+function resetImageScale(img) {
+    const content = document.querySelector("#popup1 .content"); 
+    const containerWidth = content.offsetWidth; 
+    const containerHeight = content.offsetHeight; 
+    const imgWidth = img.naturalWidth;
+    const imgHeight = img.naturalHeight;
+
+   
+    const widthScale = containerWidth / imgWidth;
+    const heightScale = containerHeight / imgHeight;
+    let calculatedScale = Math.min(widthScale, heightScale);
+
+   
+    const minScale = 0.8;
+    if (calculatedScale < minScale) {
+        calculatedScale = minScale; 
+    }
+
+    scale = calculatedScale; 
+    img.style.transform = `scale(${scale})`;
+
+    const contentRect = content.getBoundingClientRect(); 
+    const imgRect = img.getBoundingClientRect(); 
+
+    offsetX = (contentRect.width - imgRect.width) / 2;
+    offsetY = (contentRect.height - imgRect.height) / 2;
+
+    img.style.left = `${offsetX}px`;
+    img.style.top = `${offsetY}px`; 
+}
+
+function getDistance(touch1, touch2) {
+    const dx = touch2.pageX - touch1.pageX;
+    const dy = touch2.pageY - touch1.pageY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+function onAudioEnded(el) {
+	if (el && window.currentLink) {
+		window.currentLink.classList.remove('nowPlaying');
+		let nextLink= findNextPrevLink(window.currentLink, REGEX_TYPE_AUDIO);
+		const href = nextLink.getAttribute('href');
+
+		if (REGEX_TYPE_AUDIO.test(href)) {
+			el.src = href;
+			el.play();
+			el.title = decodeURIComponent(href);
+			nextLink.classList.add('nowPlaying');
+			nextLink.scrollIntoView(
+				{
+					behavior: "smooth",
+					block: "center"
+				}
+				);
+			window.currentLink = nextLink;
+		}
+	}
+}
+
+function startAudioPlayer(href) {
+	const audioPlayer = document.getElementById('aplayer');
+		audioPlayer.parentElement.style.display = 'block';
+		audioPlayer.src = href;
+		audioPlayer.title = decodeURIComponent(href);
+		audioPlayer.play();
+		document.querySelectorAll('th').forEach((th) => th.classList.toggle('offset'));
+}
+
+function hideAudioPlayer() {
+	const audioPlayer = document.getElementById('aplayer');
+	audioPlayer.pause();
+	audioPlayer.parentElement.style.display = 'none';
+	document.querySelectorAll('th').forEach((th) => th.classList.toggle('offset'));
+
+	if (window.currentLink) {
+		window.currentLink.classList.remove('nowPlaying');
+	}
+}
+
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+  pedantic: false,
+  sanitize: false,
+});
+
+function escapeHTML(str) {
+    const escapeMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '`': '&#96;',
+        '/': '&#x2F;',
+        '=': '&#x3D;',
+        '+': '&#43;',
+        '-': '&#45;',
+        '*': '&#42;',
+        '!': '&#33;',
+        '|': '&#124;',
+        ':': '&#58;',
+        ';': '&#59;',
+        '#': '&#35;',
+        '%': '&#37;',
+        '?': '&#63;',
+        '@': '&#64;',
+        '[': '&#91;',
+        ']': '&#93;',
+        '{': '&#123;',
+        '}': '&#125;',
+        '(': '&#40;',
+        ')': '&#41;',
+    };
+    return str.replace(/[&<>"'`/=\+\-\*!|:;#%?\@\[\]\{\}\(\)]/g, match => escapeMap[match]);
+}
+
+function onLinkClicked(link, evt) {
+	var href = link.getAttribute("href");
+	var filehref = decodeURIComponent(link.href);
+        var downloadBtn = document.getElementById('downloadBtn');
+        downloadBtn.setAttribute('data-file-url', filehref);
+	//downloadBtn.setAttribute('href', filehref);
+	downloadBtn.setAttribute('download', '');
+	if (window.currentLink && REGEX_TYPE_AUDIO.test(href)) {
+		window.currentLink.classList.remove('nowPlaying');
+	}
+	window.currentLink = link;
+
+	const event = evt || new Event('click');
+
+	const fileName = href.split('/').pop();
+	const baseName = fileName.split('.')[0];
+
+	var popup = document.querySelector('#popup1');
+	var content = popup.querySelector('.content');
+	popup.querySelector('.info').textContent = decodeURIComponent(fileName);
+
+	if (REGEX_TYPE_VIDEO.test(href)) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+
+		hideAudioPlayer();
+
+		const video = document.createElement('video');
+		video.setAttribute('autoplay', true);
+		video.setAttribute('controls', 'controls');
+		video.setAttribute('preload', 'auto');
+		video.setAttribute('tabIndex', "-1");
+
+		const source = document.createElement('source');
+
+		source.src = href;
+		video.appendChild(source);
+
+		document.querySelectorAll('a').forEach((link) => {
+			if (new RegExp(`${baseName}\.?.*\.(vtt|srt)`, 'i').test(link.href)) {
+				const track = document.createElement('track');
+				loadSubtitle(link.href)
+					.then(url => {
+						track.src = url;
+						track.kind = 'subtitles';
+						track.label = decodeURIComponent(link.href.split('/').pop());
+						track.srclang = 'en';
+
+						if (!video.hasDefaultSubs) {
+							track.default = true;
+							video.hasDefaultSubs = true;
+						}
+
+						video.appendChild(track);
+					})
+			}
+		});
+
+		content.innerHTML = '';
+		content.appendChild(video);
+		showModal(popup, 'night');
+
+	}else if (REGEX_TYPE_AUDIO.test(href)) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+
+		startAudioPlayer(href);
+		link.classList.add('nowPlaying');
+	}
+	// special treatment by extension
+	else if (REGEX_TYPE_MARKDOWN.test(href) || REGEX_TYPE_CODE.test(href)) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		fetch(href)
+			.then(function (response) {
+				if (response.ok) {
+					return response.text();
+				} else {
+					throw new Error(response.statusText);
+				}
+			})
+			.then(function (text) {
+				showModal(popup, 'day');
+				var content = popup.querySelector('.content');
+				globalCodeContent = text; 
+  				showCopyButton(text);
+				// Check if the window has marked library
+				if (href.match(REGEX_TYPE_MARKDOWN) && window.marked) {
+					// Parse the markdown text as HTML and set it as the popup innerHTML
+					content.innerHTML = marked.parse(text);
+				        content.classList.add('markdown-body');
+				} else {
+					content.innerHTML = `<pre><code>${escapeHTML(text)}</code></pre>`;
+					const codeBlock = content.querySelector('pre code');
+					const lines = text.split('\n');
+					const lineNumbers = lines.map((_, index) => index + 1).join('\n');
+					const lineNumberWrapper = document.createElement('div');
+					lineNumberWrapper.className = 'line-numbers';
+					lineNumberWrapper.textContent = lineNumbers;
+					const preElement = content.querySelector('pre');
+					const wrapper = document.createElement('div');
+					wrapper.className = 'code-wrapper';
+					wrapper.appendChild(lineNumberWrapper);
+					wrapper.appendChild(preElement);
+					content.innerHTML = '';
+					content.appendChild(wrapper);
+					const maxLineNumberLength = (lines.length).toString().length; 
+					lineNumberWrapper.style.width = `${maxLineNumberLength + 1}ch`; 
+
+					window.hljs ? window.hljs.highlightAll() : console.error('nohljs!');
+
+					preElement.addEventListener('scroll', function () {
+    						lineNumberWrapper.scrollTop = preElement.scrollTop;
+               
+                			});
+					preElement.style.overflowX = 'auto'; 
+
+					function adjustLineNumberHeight() {
+    						const preHeight = preElement.clientHeight;
+    						const scrollbarHeight = 16; 
+    						const adjustmentFactor = 0; 
+
+						lineNumberWrapper.style.height = `${preHeight - scrollbarHeight}px`;
+						lineNumberWrapper.style.paddingBottom = `${scrollbarHeight}px`;
+					}
+
+					adjustLineNumberHeight();
+
+					window.addEventListener('resize', adjustLineNumberHeight);
+				}
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	} else if (REGEX_TYPE_IMAGE.test(href)) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		content.innerHTML = `<img src="${href}">`;
+		showModal(popup, 'night');
+	} else if (window.location.search && !link.href.includes(window.location.search)) { // regular click
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		document.location.href = `${link.href}${window.location.search}`;
+	}
+
+}
+	async function downloadFile() {
+        var downloadBtn = document.getElementById('downloadBtn');
+        var fileUrl = downloadBtn.getAttribute('data-file-url'); 
+
+        if (!fileUrl) {
+            alert("未找到可下载的文件链接！");
+            return;
+        }
+
+        try {
+            const response = await fetch(fileUrl);
+            if (!response.ok) throw new Error("文件下载失败！");
+
+            const blob = await response.blob(); 
+            const fileName = fileUrl.split('/').pop(); 
+
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            URL.revokeObjectURL(blobUrl);
+
+            console.log("文件已成功下载：" + fileName);
+        } catch (error) {
+            console.error("下载失败：", error.message);
+            alert("下载失败，请稍后重试！");
+        }
+    }
+	
+function copyToClipboard() {
+    const copyBtn = document.getElementById('copyBtn');
+
+    if (!globalCodeContent) {
+        alert('没有可以复制的内容！');
+        return;
+    }
+
+    copyBtn.classList.add('disabled');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(globalCodeContent)
+            .then(() => {
+                alert('已复制到剪贴板！');
+            })
+            .catch(() => {
+                alert('复制失败，请手动复制！');
+            })
+            .finally(() => {
+                copyBtn.classList.remove('disabled');
+            });
+    } else {
+        // 使用传统方法实现兼容
+        const textArea = document.createElement('textarea');
+        textArea.value = globalCodeContent;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = 0;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+            alert('已复制到剪贴板！');
+        } catch (err) {
+            alert('复制失败，请手动复制！');
+            console.error('复制失败:', err);
+        }
+        document.body.removeChild(textArea);
+        copyBtn.classList.remove('disabled');
+    }
+}
+
+function showCopyButton(content) {
+    const copyBtn = document.getElementById('copyBtn');
+    globalCodeContent = content;
+    copyBtn.classList.remove('hidden'); 
+}
+
+document.onclick = onDocumentClickHandler;
+</script>
+
+</head>
+<body onload="initPage()">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" color="red"><defs><g id="go-up"><path stroke="none" d="M0 0h24v24H0z"/><path d="M18 18h-6a3 3 0 0 1-3-3V5L5 9m8 0L9 5"/></g><g id="folder"><path stroke="none" d="M0 0h24v24H0z"/><path fill="#ffb900" stroke-width="0" d="M9 3a1 1 0 0 1 .6.2h.1L12.4 6H19a3 3 0 0 1 3 2.8V17a3 3 0 0 1-2.8 3H5a3 3 0 0 1-3-2.8V6a3 3 0 0 1 2.8-3H9z"/></g><g id="folder-symlink"><path stroke="none" d="M0 0h24v24H0Z"/><path fill="#ffb900" stroke-width="0" d="M9 3a1 1 0 0 1 .6.2h.1L12.4 6H19a3 3 0 0 1 3 2.8V17a3 3 0 0 1-2.8 3H5a3 3 0 0 1-3-2.8V6a3 3 0 0 1 2.8-3H5Z"/><path fill="#000" stroke-width=".1" d="M2.8 17.3c0-2.4 1.8-4.3 4-4.5v-1.1c0-.4.5-.6.7-.3l2.5 2.5v.2l-2.5 2.5c-.2.2-.6 0-.6-.3v-1c-2 .2-3.5 1.3-3.8 3.2l-.3-1.2Z"/></g><g id="symlink"><path stroke="none" d="M0 0h24v24H0z"/><path d="M4 21v-4a3 3 0 0 1 3-3h5"/><path d="m9 17 3-3-3-3m5-8v4a1 1 0 0 0 1 1h4"/><path d="M5 11V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2H7.5"/></g><g id="generic"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></g><g id="license"><path stroke="none" d="M0 0h24v24H0z"/><path d="M15 21H6a3 3 0 0 1-3-3v-1h10v2a2 2 0 0 0 4 0V5a2 2 0 1 1 2 2h-2m2-4H8a3 3 0 0 0-3 3v11M9 7h4m-4 4h4"/></g><g id="image"><path stroke="none" d="M0 0h24v24H0z"/><path d="M15 8h0M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6z"/><path d="m3 16 5-5c1-.9 2-.9 3 0l5 5"/><path d="m14 14 1-1c1-.9 2-.9 3 0l3 3"/></g><g id="video"><path stroke="none" d="M0 0h24v24H0z"/><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm4-2v16m8-16v16M4 8h4m-4 8h4m-4-4h16m-4-4h4m-4 8h4"/></g><g id="audio"><path stroke="none" d="M0 0h24v24H0z"/><path d="M3 17a3 3 0 1 0 6 0 3 3 0 1 0-6 0m10 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0"/><path d="M9 17V4h10v13M9 8h10"/></g><g id="pdf"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v4M5 18h1.5a1.5 1.5 0 0 0 0-3H5v6m12-3h2m1-3h-3v6m-6-6v6h1a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-1z"/></g><g id="csv"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v4M7 16.5a1.5 1.5 0 0 0-3 0v3a1.5 1.5 0 0 0 3 0m3 .8c0 .4.3.7.8.7H12a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-1a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1.3a.8.8 0 0 1 .7.8m3-.8 2 6 2-6"/></g><g id="doc"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM9 9h1m-1 4h6m-6 4h6"/></g><g id="sheet"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M8 11h8v7H8zm0 4h8m-5-4v7"/></g><g id="ppt"><path stroke="none" d="M0 0h24v24H0z"/><path d="M9 12V8m6 4v-2m-3 2v-1M3 4h18M4 4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4m-8 12v4m-3 0h6"/></g><g id="archive"><path stroke="none" d="M0 0h24v24H0z"/><path d="M6 20.7A2 2 0 0 1 5 19V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2h-1"/><path d="M11 17a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2zm0-12h-1m3 2h-1m-1 2h-1m3 2h-1m-1 2h-1m3 2h-1"/></g><g id="deb"><path stroke="none" d="M0 0h24v24H0z"/><path d="M12 17c-2.4-1-4-3.2-4-5.6 0-2.2 1-3.2 1.6-3.6C12.2 5.6 16 7.5 16 11c0 2.5-2.9 2.1-3.5 1.5-.6-.6-1-1.5-.5-2.5"/><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"/></g><g id="dist"><path stroke="none" d="M0 0h24v24H0z"/><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3m0 9 8-4.5M12 12v9m0-9L4 7.5m12-2.2L8 9.8"/></g><g id="ps1"><path stroke="none" d="M0 0h24v24H0z"/><path d="M4.9 20h11.9a2 2 0 0 0 1.8-1.6l2.4-12A2 2 0 0 0 19.5 4a1.8 1.8 0 0 0-.4 0H7.2a2 2 0 0 0-1.8 1.6L3 17.6A2 2 0 0 0 4.5 20h.4z"/><path d="m9 8 4 4-6 4m5 0h3"/></g><g id="py"><path stroke="none" d="M0 0h24v24H0z"/><path d="M12 9H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h3m4-2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3"/><path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4m-5-9h0m2 12h0"/></g><g id="sh"><path stroke="none" d="M0 0h24v24H0z"/><path d="M17 20H6a3 3 0 0 1 0-6h11a3 3 0 0 0 0 6h1a3 3 0 0 0 3-3V6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v8"/></g><g id="dmg"><path stroke="none" d="M0 0h24v24H0z"/><path d="M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zm4 3v1m10-1v1"/><path d="M12.5 4c-.7 1.5-1.3 3.4-1.5 9h2.5c-.2 2.9 0 5 .5 7"/><path d="M7 15.5c3.7 2 6.3 2 10 0"/></g><g id="iso"><path stroke="none" d="M0 0h24v24H0z"/><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0"/><path d="M11 12a1 1 0 1 0 2 0 1 1 0 1 0-2 0m-4 0a5 5 0 0 1 5-5m0 10a5 5 0 0 0 5-5"/></g><g id="md"><path stroke="none" d="M0 0h24v24H0z"/><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M7 15V9l2 2 2-2v6m3-2 2 2 2-2m-2 2V9"/></g><g id="font"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zm-6-3h2m-1 0v-7"/><path d="M9 12v-1h6v1"/></g><g id="go"><path stroke="none" d="M0 0h24v24H0z"/><path d="M15.7 14.3c1 1 3 .9 4.2-.4 1.3-1.3 1.5-3.1.4-4.2-1-1-3-.9-4.2.4-1.3 1.3-1.5 3.1-.4 4.2zm-3-5.1c-1.1-.5-2.6-.2-3.6.9-1.3 1.3-1.5 3.1-.4 4.2 1 1 3 .9 4.3-.4a3.7 3.7 0 0 0 1-1.9h-2.4m-6.1 3H4m2-6H4m1 3H2"/></g><g id="html"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v4M2 21v-6m3 0v6m-3-3h3m15-3v6h2m-9 0v-6l2 3 2-3v6m-9.5-6h3M9 15v6"/></g><g id="js"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4M3 15h3v4.5a1.5 1.5 0 0 1-3 0m6 .8c0 .4.3.7.8.7H11a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-1a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1.3a.8.8 0 0 1 .7.8"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2h-1"/></g><g id="css"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v4M8 16.5a1.5 1.5 0 0 0-3 0v3a1.5 1.5 0 0 0 3 0m3 .8c0 .4.3.7.8.7H13a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-1a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1.3a.8.8 0 0 1 .7.8m3 4.5c0 .4.3.7.8.7H19a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-1a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1.3a.8.8 0 0 1 .7.8"/></g><g id="json"><path stroke="none" d="M0 0h24v24H0z"/><path d="M20 16V8l3 8V8m-8 0a2 2 0 0 1 2 2v4a2 2 0 1 1-4 0v-4a2 2 0 0 1 2-2zM1 8h3v6.5a1.5 1.5 0 0 1-3 0V14m6 1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H8a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1"/></g><g id="ts"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2h-1"/><path d="M14 3v4a1 1 0 0 0 1 1h4M9 20.3c0 .4.3.7.8.7H11a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-1a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1.3a.8.8 0 0 1 .7.8M3.5 15h3M5 15v6"/></g><g id="sql"><path stroke="none" d="M0 0h24v24H0z"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M14 3v4a1 1 0 0 0 1 1h4M5 20.3c0 .4.3.7.8.7H7a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H6a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h1.3a.8.8 0 0 1 .7.8"/><path d="M5 12V5a2 2 0 0 1 2-2h7l5 5v4m-1 3v6h2m-7-6a2 2 0 0 1 2 2v2a2 2 0 1 1-4 0v-2a2 2 0 0 1 2-2zm1 5 1.5 1.5"/></g><g id="db"><path stroke="none" d="M0 0h24v24H0z"/><path d="M4 6a8 3 0 1 0 16 0A8 3 0 1 0 4 6"/><path d="M4 6v6a8 3 0 0 0 16 0V6"/><path d="M4 12v6a8 3 0 0 0 16 0v-6"/></g><g id="email"><path stroke="none" d="M0 0h24v24H0z"/><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="m3 7 9 6 9-6"/></g><g id="cert"><path stroke="none" d="M0 0h24v24H0z"/><path d="M12 15a3 3 0 1 0 6 0 3 3 0 1 0-6 0"/><path d="M13 17.5V22l2-1.5 2 1.5v-4.5"/><path d="M10 19H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-1 1.7M6 9h12M6 12h3m-3 3h2"/></g><g id="keystore"><path stroke="none" d="M0 0h24v24H0z"/><path d="m16.6 3.8 3.6 3.6a2.9 2.9 0 0 1 0 4.1l-2.7 2.7a2.9 2.9 0 0 1-4 0l-.4-.3-6.5 6.5a2 2 0 0 1-1.3.6H4a1 1 0 0 1-1-.9v-1.3a2 2 0 0 1 .5-1.3h0L4 17h2v-2h2v-2l2.1-2.1-.3-.3a2.9 2.9 0 0 1 0-4.1l2.7-2.7a2.9 2.9 0 0 1 4 0zM15 9h0"/></g></defs></svg>
+	<header>
+		<div class="fixedplayer">
+			<audio controls id="aplayer" src="" onended="onAudioEnded(this)"></audio><a href="#" onclick="hideAudioPlayer(); return false;">&times;</a>
+		</div>
+
+		<div class="wrapper">
+			<div class="breadcrumbs">当前文件路径</div>
+				<h1>
+					{{range $i, $crumb := .Breadcrumbs}}<a href="{{html $crumb.Link}}">{{html $crumb.Text}}</a>{{if ne $i 0}}/{{end}}{{end}}
+				</h1>
+			</div>
+
+		</header>
+		<div class="wrapper">
+			<main>
+				<div class="meta">
+					<div id="summary">
+						<span class="meta-item">
+							<b>{{.NumDirs}}</b> 个文件夹
+						</span>
+						<span class="meta-item">
+							<b>{{.NumFiles}}</b> 个文件
+						</span>
+						<span class="meta-item">
+							总计 <b>{{.HumanTotalFileSize}}</b>  
+						</span>
+						{{- if ne 0 .Limit}}
+						<span class="meta-item">
+							(只显示了其中 <b>{{.Limit}}</b> 个文件)
+						</span>
+						{{- end}}
+					</div>
+					<a href="javascript:queryParam('layout', '')" id="layout-list" class='layout{{if eq $.Layout "list" ""}}current{{end}}'>
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-layout-list" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+							<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/>
+							<path d="M4 14m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/>
+						</svg>
+						列表
+					</a>
+					<a href="javascript:queryParam('layout', 'grid')" id="layout-grid" class='layout{{if eq $.Layout "grid"}}current{{end}}'>
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-layout-grid" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+							<path d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+							<path d="M14 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+							<path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+							<path d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+						</svg>
+						网格
+					</a>
+				</div>
+				<div class='listing{{if eq .Layout "grid"}} grid{{end}}'>
+				{{- if eq .Layout "grid"}}
+				{{- range .Items}}
+				<div class="entry">
+					<a href="{{html .URL}}" title='{{html (.HumanModTime "January 2, 2006 at 15:04:05")}}'>
+						{{template "icon" .}}
+						<div class="name">{{html .Name}}</div>
+						<div class="size">{{.HumanSize}}</div>
+					</a>
+				</div>
+				{{- end}}
+				{{- else}}
+				<table aria-describedby="summary">
+					<thead>
+					<tr>
+						<th></th>
+						<th>
+							{{- if and (eq .Sort "namedirfirst") (ne .Order "desc")}}
+							<a href="?sort=namedirfirst&order=desc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}" class="icon">
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M18 14l-6 -6l-6 6h12"/>
+								</svg>
+							</a>
+							{{- else if and (eq .Sort "namedirfirst") (ne .Order "asc")}}
+							<a href="?sort=namedirfirst&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}" class="icon">
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M6 10l6 6l6 -6h-12"/>
+								</svg>
+							</a>
+							{{- else}}
+							<a href="?sort=namedirfirst&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}" class="icon sort">
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M18 14l-6 -6l-6 6h12"/>
+								</svg>
+							</a>
+							{{- end}}
+							
+							{{- if and (eq .Sort "name") (ne .Order "desc")}}
+							<a href="?sort=name&order=desc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								名称
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M18 14l-6 -6l-6 6h12"/>
+								</svg>
+							</a>
+							{{- else if and (eq .Sort "name") (ne .Order "asc")}}
+							<a href="?sort=name&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								名称
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M6 10l6 6l6 -6h-12"/>
+								</svg>
+							</a>
+							{{- else}}
+							<a href="?sort=name&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								名称
+							</a>
+							{{- end}}
+
+							<div class="filter-container">
+								<svg id="search-icon" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+									<path d="M21 21l-6 -6"/>
+								</svg>
+								<input type="search" placeholder="搜索" id="filter" onkeyup='filter()'>
+							</div>
+						</th>
+						<th>
+							{{- if and (eq .Sort "size") (ne .Order "desc")}}
+							<a href="?sort=size&order=desc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								大小
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M18 14l-6 -6l-6 6h12"/>
+								</svg>
+							</a>
+							{{- else if and (eq .Sort "size") (ne .Order "asc")}}
+							<a href="?sort=size&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								大小
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M6 10l6 6l6 -6h-12"/>
+								</svg>
+							</a>
+							{{- else}}
+							<a href="?sort=size&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								大小
+							</a>
+							{{- end}}
+						</th>
+						<th class="hideable">
+							{{- if and (eq .Sort "time") (ne .Order "desc")}}
+							<a href="?sort=time&order=desc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								更新时间
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M18 14l-6 -6l-6 6h12"/>
+								</svg>
+							</a>
+							{{- else if and (eq .Sort "time") (ne .Order "asc")}}
+							<a href="?sort=time&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								更新时间
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-down" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M6 10l6 6l6 -6h-12"/>
+								</svg>
+							</a>
+							{{- else}}
+							<a href="?sort=time&order=asc{{if ne 0 .Limit}}&limit={{.Limit}}{{end}}{{if ne 0 .Offset}}&offset={{.Offset}}{{end}}">
+								更新时间
+							</a>
+							{{- end}}
+						</th>
+						<th class="hideable"></th>
+					</tr>
+					</thead>
+					<tbody>
+					{{- if .CanGoUp}}
+					<tr>
+						<td></td>
+						<td>
+							<a href="..">
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-corner-left-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+									<path d="M18 18h-6a3 3 0 0 1 -3 -3v-10l-4 4m8 0l-4 -4"/>
+								</svg>
+								<span class="go-up">返回上级目录</span>
+							</a>
+						</td>
+						<td></td>
+						<td class="hideable"></td>
+						<td class="hideable"></td>
+					</tr>
+					{{- end}}
+					{{- range .Items}}
+					<tr class="file">
+						<td></td>
+						<td>
+							<a href="{{html .URL}}">
+								{{template "icon" .}}
+								{{- if not .SymlinkPath}}
+								<span class="name">{{html .Name}}</span>
+								{{- else}}
+								<span class="name">{{html .Name}} <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" />
+									<path d="M15 16l4 -4" />
+									<path d="M15 8l4 4" />
+								</svg> {{html .SymlinkPath}}</span>
+								{{- end}}
+							</a>
+						</td>
+						{{- if .IsDir}}
+						<td>&mdash;</td>
+						{{- else}}
+						<td class="size" data-size="{{.Size}}">
+							<div class="sizebar">
+								<div class="sizebar-bar"></div>
+								<div class="sizebar-text">
+									{{if .IsSymlink}}↱&nbsp;{{end}}{{.HumanSize}}
+								</div>
+							</div>
+						</td>
+						{{- end}}
+						<td class="timestamp hideable">
+							<time datetime="{{.HumanModTime "2006-01-02T15:04:05Z"}}">{{.HumanModTime "01/02/2006 03:04:05 PM -07:00"}}</time>
+						</td>
+						<td class="hideable"></td>
+					</tr>
+					{{- end}}
+					</tbody>
+				</table>
+				{{- end}}
+			</div>
+			</main>
+		</div>
+
+		{{$markdownFilePath := printf "/%s/README.md" .OriginalReq.URL.Path}}
+		{{if fileExists (printf "/%s/README.md" .OriginalReq.URL.Path)}}
+			{{$markdownFilePath = printf "/%s/README.md" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/readme.md" .OriginalReq.URL.Path)}}
+			{{$markdownFilePath = printf "/%s/readme.md" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/README" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/README" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/readme" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/readme" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/README.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/README.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/readme.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/readme.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/说明.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/说明.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/说明" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/说明" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/介绍.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/介绍.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/介绍" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/介绍" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/教程.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/教程.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/教程" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/教程" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/使用说明.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/使用说明.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/使用说明" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/使用说明" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/使用教程.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/使用教程.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/使用教程" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/使用教程" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/使用方法.txt" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/使用方法.txt" .OriginalReq.URL.Path}}
+		{{else if fileExists (printf "/%s/使用说明" .OriginalReq.URL.Path)}}
+    			{{$markdownFilePath = printf "/%s/使用方法" .OriginalReq.URL.Path}}
+		{{end}}
+		{{if (fileExists $markdownFilePath)}}
+		{{$markdownFile := (include $markdownFilePath)}}
+		<div class="wrapper">
+			<main>
+				<div class="markdown-body" style="margin:1em;padding:1em">
+					{{markdown $markdownFile}}
+					<style>
+.heart-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;                
+  margin: 2.5em 0;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.heart-divider span {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               "PingFang SC", "Hiragino Sans GB",
+               "Microsoft YaHei", Arial, sans-serif;
+  animation:
+    wave 1.8s ease-in-out infinite,
+    colorFlow 4s linear infinite;
+  will-change: transform, color;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes colorFlow {
+  0%   { color: #ff7eb3; }
+  33%  { color: #c77dff; }
+  66%  { color: #5ac8fa; }
+  100% { color: #ff7eb3; }
+}
+</style>
+
+<div class="heart-divider" data-heart-divider></div>
+
+<script>
+(function () {
+  const colors = ['#ff7eb3', '#c77dff', '#5ac8fa'];
+
+  function buildHearts() {
+    const container = document.querySelector('.markdown-body');
+    const divider = document.querySelector('[data-heart-divider]');
+    if (!container || !divider) return;
+
+    divider.innerHTML = '';
+
+    const test = document.createElement('span');
+    test.textContent = '♥';
+    test.style.visibility = 'hidden';
+    test.style.position = 'absolute';
+    divider.appendChild(test);
+
+    const heartWidth = test.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(divider).gap) || 0;
+
+    divider.removeChild(test);
+
+    const containerWidth = container.clientWidth;
+    const count = Math.floor(containerWidth / (heartWidth + gap));
+
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement('span');
+      span.textContent = '♥';
+
+      span.style.color = colors[i % colors.length];
+
+      span.style.animationDelay =
+        `${i * 0.12}s, ${i * 0.25}s`;
+
+      divider.appendChild(span);
+    }
+  }
+
+  buildHearts();
+  window.addEventListener('resize', buildHearts);
+})();
+</script>
+				</div>
+			</div>
+			</main>
+		</div>
+		{{end}}
+
+		<footer>
+			<a rel="noopener noreferrer" href="https://caddyserver.com">
+				<svg class="caddy-logo" viewBox="0 0 379 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+					<g transform="matrix(1,0,0,1,-1982.99,-530.985)">
+						<g transform="matrix(1.16548,0,0,1.10195,1823.12,393.466)">
+							<g transform="matrix(1,0,0,1,0.233052,1.17986)">
+								<g id="Icon" transform="matrix(0.858013,0,0,0.907485,-3224.99,-1435.83)">
+									<g>
+										<g transform="matrix(-0.191794,-0.715786,0.715786,-0.191794,4329.14,4673.64)">
+											<path d="M3901.56,610.734C3893.53,610.261 3886.06,608.1 3879.2,604.877C3872.24,601.608 3866.04,597.093 3860.8,591.633C3858.71,589.457 3856.76,587.149 3854.97,584.709C3853.2,582.281 3851.57,579.733 3850.13,577.066C3845.89,569.224 3843.21,560.381 3842.89,550.868C3842.57,543.321 3843.64,536.055 3845.94,529.307C3848.37,522.203 3852.08,515.696 3856.83,510.049L3855.79,509.095C3850.39,514.54 3846.02,520.981 3842.9,528.125C3839.84,535.125 3838.03,542.781 3837.68,550.868C3837.34,561.391 3839.51,571.425 3843.79,580.306C3845.27,583.38 3847.03,586.304 3849.01,589.049C3851.01,591.806 3853.24,594.39 3855.69,596.742C3861.75,602.568 3869,607.19 3877.03,610.1C3884.66,612.867 3892.96,614.059 3901.56,613.552L3901.56,610.734Z" fill="rgb(0,144,221)"/>
+										</g>
+										<g transform="matrix(-0.191794,-0.715786,0.715786,-0.191794,4329.14,4673.64)">
+											<path d="M3875.69,496.573C3879.62,494.538 3883.8,492.897 3888.2,491.786C3892.49,490.704 3896.96,490.124 3901.56,490.032C3903.82,490.13 3906.03,490.332 3908.21,490.688C3917.13,492.147 3925.19,495.814 3932.31,500.683C3936.13,503.294 3939.59,506.335 3942.81,509.619C3947.09,513.98 3950.89,518.816 3953.85,524.232C3958.2,532.197 3960.96,541.186 3961.32,550.868C3961.61,558.748 3960.46,566.345 3957.88,573.322C3956.09,578.169 3953.7,582.753 3950.66,586.838C3947.22,591.461 3942.96,595.427 3938.27,598.769C3933.66,602.055 3928.53,604.619 3923.09,606.478C3922.37,606.721 3921.6,606.805 3920.93,607.167C3920.42,607.448 3920.14,607.854 3919.69,608.224L3920.37,610.389C3920.98,610.432 3921.47,610.573 3922.07,610.474C3922.86,610.344 3923.55,609.883 3924.28,609.566C3931.99,606.216 3938.82,601.355 3944.57,595.428C3947.02,592.903 3949.25,590.174 3951.31,587.319C3953.59,584.168 3955.66,580.853 3957.43,577.348C3961.47,569.34 3964.01,560.422 3964.36,550.868C3964.74,540.511 3962.66,530.628 3958.48,521.868C3955.57,515.775 3951.72,510.163 3946.95,505.478C3943.37,501.962 3939.26,498.99 3934.84,496.562C3926.88,492.192 3917.87,489.76 3908.37,489.229C3906.12,489.104 3903.86,489.054 3901.56,489.154C3896.87,489.06 3892.3,489.519 3887.89,490.397C3883.3,491.309 3878.89,492.683 3874.71,494.525L3875.69,496.573Z" fill="rgb(0,144,221)"/>
+										</g>
+									</g>
+									<g>
+										<g transform="matrix(-3.37109,-0.514565,0.514565,-3.37109,4078.07,1806.88)">
+											<path d="M22,12C22,10.903 21.097,10 20,10C19.421,10 18.897,10.251 18.53,10.649C18.202,11.006 18,11.481 18,12C18,13.097 18.903,14 20,14C21.097,14 22,13.097 22,12Z" fill="none" fill-rule="nonzero" stroke="rgb(0,144,221)" stroke-width="1.05px"/>
+										</g>
+										<g transform="matrix(-5.33921,-5.26159,-3.12106,-6.96393,4073.87,1861.55)">
+											<path d="M10.315,5.333C10.315,5.333 9.748,5.921 9.03,6.673C7.768,7.995 6.054,9.805 6.054,9.805L6.237,9.86C6.237,9.86 8.045,8.077 9.36,6.771C10.107,6.028 10.689,5.444 10.689,5.444L10.315,5.333Z" fill="rgb(0,144,221)"/>
+										</g>
+									</g>
+									<g id="Padlock" transform="matrix(3.11426,0,0,3.11426,3938.31,1737.25)">
+										<g>
+											<path d="M9.876,21L18.162,21C18.625,21 19,20.625 19,20.162L19,11.838C19,11.375 18.625,11 18.162,11L5.838,11C5.375,11 5,11.375 5,11.838L5,16.758" fill="none" stroke="rgb(34,182,56)" stroke-width="1.89px" stroke-linecap="butt" stroke-linejoin="miter"/>
+											<path d="M8,11L8,7C8,4.806 9.806,3 12,3C14.194,3 16,4.806 16,7L16,11" fill="none" fill-rule="nonzero" stroke="rgb(34,182,56)" stroke-width="1.89px"/>
+										</g>
+									</g>
+									<g>
+										<g transform="matrix(5.30977,0.697415,-0.697415,5.30977,3852.72,1727.97)">
+											<path d="M22,12C22,11.659 21.913,11.337 21.76,11.055C21.421,10.429 20.756,10 20,10C18.903,10 18,10.903 18,12C18,13.097 18.903,14 20,14C21.097,14 22,13.097 22,12Z" fill="none" fill-rule="nonzero" stroke="rgb(0,144,221)" stroke-width="0.98px"/>
+										</g>
+										<g transform="matrix(4.93114,2.49604,1.11018,5.44847,3921.41,1726.72)">
+											<path d="M8.902,6.77C8.902,6.77 7.235,8.253 6.027,9.366C5.343,9.996 4.819,10.502 4.819,10.502L5.52,11.164C5.52,11.164 6.021,10.637 6.646,9.951C7.749,8.739 9.219,7.068 9.219,7.068L8.902,6.77Z" fill="rgb(0,144,221)"/>
+										</g>
+									</g>
+								</g>
+								<g id="Text">
+									<g id="Wordmark" transform="matrix(1.32271,0,0,2.60848,-899.259,-791.691)">
+										<g id="y" transform="matrix(0.50291,0,0,0.281607,905.533,304.987)">
+											<path d="M192.152,286.875L202.629,268.64C187.804,270.106 183.397,265.779 180.143,263.391C176.888,261.004 174.362,257.99 172.563,254.347C170.765,250.705 169.866,246.691 169.866,242.305L169.866,208.107L183.21,208.107L183.21,242.213C183.21,245.188 183.896,247.822 185.268,250.116C186.64,252.41 188.465,254.197 190.743,255.475C193.022,256.754 195.501,257.393 198.182,257.393C200.894,257.393 203.393,256.75 205.68,255.463C207.966,254.177 209.799,252.391 211.178,250.105C212.558,247.818 213.248,245.188 213.248,242.213L213.248,208.107L226.545,208.107L226.545,242.305C226.545,246.707 225.378,258.46 218.079,268.64C215.735,271.909 207.835,286.875 207.835,286.875L192.152,286.875Z" fill="rgb(47,47,47)" fill-rule="nonzero"/>
+										</g>
+										<g id="add" transform="matrix(0.525075,0,0,0.281607,801.871,304.987)">
+											<g transform="matrix(116.242,0,0,116.242,161.846,267.39)">
+												<path d="M0.276,0.012C0.227,0.012 0.186,0 0.15,-0.024C0.115,-0.048 0.088,-0.08 0.069,-0.12C0.05,-0.161 0.04,-0.205 0.04,-0.254C0.04,-0.305 0.051,-0.35 0.072,-0.39C0.094,-0.431 0.125,-0.463 0.165,-0.487C0.205,-0.51 0.254,-0.522 0.31,-0.522C0.366,-0.522 0.413,-0.51 0.452,-0.486C0.491,-0.463 0.521,-0.431 0.542,-0.39C0.562,-0.35 0.573,-0.305 0.573,-0.256L0.573,-0L0.458,-0L0.458,-0.095L0.456,-0.095C0.446,-0.076 0.433,-0.058 0.417,-0.042C0.401,-0.026 0.381,-0.013 0.358,-0.003C0.335,0.007 0.307,0.012 0.276,0.012ZM0.307,-0.086C0.337,-0.086 0.363,-0.093 0.386,-0.108C0.408,-0.123 0.426,-0.144 0.438,-0.17C0.45,-0.195 0.456,-0.224 0.456,-0.256C0.456,-0.288 0.45,-0.317 0.438,-0.342C0.426,-0.367 0.409,-0.387 0.387,-0.402C0.365,-0.417 0.338,-0.424 0.308,-0.424C0.276,-0.424 0.249,-0.417 0.226,-0.402C0.204,-0.387 0.186,-0.366 0.174,-0.341C0.162,-0.315 0.156,-0.287 0.156,-0.255C0.156,-0.224 0.162,-0.195 0.174,-0.169C0.186,-0.144 0.203,-0.123 0.226,-0.108C0.248,-0.093 0.275,-0.086 0.307,-0.086Z" fill="rgb(47,47,47)" fill-rule="nonzero"/>
+											</g>
+											<g transform="matrix(116.242,0,0,116.242,226.592,267.39)">
+												<path d="M0.306,0.012C0.265,0.012 0.229,0.006 0.196,-0.008C0.163,-0.021 0.135,-0.039 0.112,-0.064C0.089,-0.088 0.071,-0.117 0.059,-0.151C0.046,-0.185 0.04,-0.222 0.04,-0.263C0.04,-0.315 0.051,-0.36 0.072,-0.399C0.093,-0.437 0.122,-0.468 0.159,-0.489C0.196,-0.511 0.239,-0.522 0.287,-0.522C0.311,-0.522 0.333,-0.518 0.355,-0.511C0.377,-0.504 0.396,-0.493 0.413,-0.48C0.431,-0.466 0.445,-0.451 0.455,-0.433L0.456,-0.433L0.456,-0.73L0.571,-0.73L0.571,-0.261C0.571,-0.205 0.56,-0.156 0.537,-0.115C0.515,-0.074 0.484,-0.043 0.444,-0.021C0.405,0.001 0.358,0.012 0.306,0.012ZM0.306,-0.086C0.335,-0.086 0.361,-0.093 0.384,-0.107C0.406,-0.122 0.423,-0.141 0.436,-0.167C0.448,-0.192 0.455,-0.221 0.455,-0.255C0.455,-0.288 0.448,-0.317 0.436,-0.343C0.423,-0.368 0.406,-0.388 0.383,-0.402C0.361,-0.417 0.335,-0.424 0.305,-0.424C0.276,-0.424 0.251,-0.417 0.228,-0.402C0.206,-0.387 0.188,-0.368 0.175,-0.342C0.163,-0.317 0.156,-0.288 0.156,-0.255C0.156,-0.222 0.163,-0.193 0.175,-0.167C0.188,-0.142 0.206,-0.122 0.229,-0.108C0.251,-0.093 0.277,-0.086 0.306,-0.086Z" fill="rgb(47,47,47)" fill-rule="nonzero"/>
+											</g>
+											<g transform="matrix(116.242,0,0,116.242,290.293,267.39)">
+												<path d="M0.306,0.012C0.265,0.012 0.229,0.006 0.196,-0.008C0.163,-0.021 0.135,-0.039 0.112,-0.064C0.089,-0.088 0.071,-0.117 0.059,-0.151C0.046,-0.185 0.04,-0.222 0.04,-0.263C0.04,-0.315 0.051,-0.36 0.072,-0.399C0.093,-0.437 0.122,-0.468 0.159,-0.489C0.196,-0.511 0.239,-0.522 0.287,-0.522C0.311,-0.522 0.333,-0.518 0.355,-0.511C0.377,-0.504 0.396,-0.493 0.413,-0.48C0.431,-0.466 0.445,-0.451 0.455,-0.433L0.456,-0.433L0.456,-0.73L0.571,-0.73L0.571,-0.261C0.571,-0.205 0.56,-0.156 0.537,-0.115C0.515,-0.074 0.484,-0.043 0.444,-0.021C0.405,0.001 0.358,0.012 0.306,0.012ZM0.306,-0.086C0.335,-0.086 0.361,-0.093 0.384,-0.107C0.406,-0.122 0.423,-0.141 0.436,-0.167C0.448,-0.192 0.455,-0.221 0.455,-0.255C0.455,-0.288 0.448,-0.317 0.436,-0.343C0.423,-0.368 0.406,-0.388 0.383,-0.402C0.361,-0.417 0.335,-0.424 0.305,-0.424C0.276,-0.424 0.251,-0.417 0.228,-0.402C0.206,-0.387 0.188,-0.368 0.175,-0.342C0.163,-0.317 0.156,-0.288 0.156,-0.255C0.156,-0.222 0.163,-0.193 0.175,-0.167C0.188,-0.142 0.206,-0.122 0.229,-0.108C0.251,-0.093 0.277,-0.086 0.306,-0.086Z" fill="rgb(47,47,47)" fill-rule="nonzero"/>
+											</g>
+										</g>
+										<g id="c" transform="matrix(-0.0716462,0.31304,-0.583685,-0.0384251,1489.76,-444.051)">
+											<path d="M2668.11,700.4C2666.79,703.699 2666.12,707.216 2666.12,710.766C2666.12,726.268 2678.71,738.854 2694.21,738.854C2709.71,738.854 2722.3,726.268 2722.3,710.766C2722.3,704.111 2719.93,697.672 2715.63,692.597L2707.63,699.378C2710.33,702.559 2711.57,706.602 2711.81,710.766C2712.2,717.38 2706.61,724.52 2697.27,726.637C2683.9,728.581 2676.61,720.482 2676.61,710.766C2676.61,708.541 2677.03,706.336 2677.85,704.269L2668.11,700.4Z" fill="rgb(46,46,46)"/>
+										</g>
+									</g>
+									<g id="R" transform="matrix(0.426446,0,0,0.451034,-1192.44,-722.167)">
+										<g transform="matrix(1,0,0,1,-0.10786,0.450801)">
+											<g transform="matrix(12.1247,0,0,12.1247,3862.61,1929.9)">
+												<path d="M0.073,-0L0.073,-0.7L0.383,-0.7C0.428,-0.7 0.469,-0.69 0.506,-0.67C0.543,-0.651 0.572,-0.623 0.594,-0.588C0.616,-0.553 0.627,-0.512 0.627,-0.465C0.627,-0.418 0.615,-0.377 0.592,-0.342C0.569,-0.306 0.539,-0.279 0.501,-0.259L0.57,-0.128C0.574,-0.12 0.579,-0.115 0.584,-0.111C0.59,-0.107 0.596,-0.106 0.605,-0.106L0.664,-0.106L0.664,-0L0.587,-0C0.56,-0 0.535,-0.007 0.514,-0.02C0.493,-0.034 0.476,-0.052 0.463,-0.075L0.381,-0.232C0.375,-0.231 0.368,-0.231 0.361,-0.231C0.354,-0.231 0.347,-0.231 0.34,-0.231L0.192,-0.231L0.192,-0L0.073,-0ZM0.192,-0.336L0.368,-0.336C0.394,-0.336 0.417,-0.341 0.438,-0.351C0.459,-0.361 0.476,-0.376 0.489,-0.396C0.501,-0.415 0.507,-0.438 0.507,-0.465C0.507,-0.492 0.501,-0.516 0.488,-0.535C0.475,-0.554 0.459,-0.569 0.438,-0.579C0.417,-0.59 0.394,-0.595 0.369,-0.595L0.192,-0.595L0.192,-0.336Z" fill="rgb(46,46,46)" fill-rule="nonzero"/>
+											</g>
+										</g>
+										<g transform="matrix(1,0,0,1,0.278569,0.101881)">
+											<circle cx="3866.43" cy="1926.14" r="8.923" fill="none" stroke="rgb(46,46,46)" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter"/>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</svg>
+			</a>
+		</footer>
+
+		<script>
+			const filterEl = document.getElementById('filter');
+			filterEl?.focus({ preventScroll: true });
+
+			filterEl?.addEventListener("search", (e) => {
+				filter();
+			});
+
+			filterEl?.addEventListener("keydown", (e) => {
+				console.log(`Key "${e.key}" released [event: keyup]`);
+				filter();
+
+
+				if (e.keyCode == 13 && e.target.value) { // Enter
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					queryParam('filter', e.target.value);
+				}
+			});
+
+			function initPage() {
+				// populate and evaluate filter
+				if (!filterEl?.value) {
+					const filterParam = new URL(window.location.href).searchParams.get('filter');
+					if (filterParam) {
+						filterEl.value = filterParam;
+					}
+				}
+				filter();
+
+				// fill in size bars
+				let largest = 0;
+				document.querySelectorAll('.size').forEach(el => {
+					largest = Math.max(largest, Number(el.dataset.size));
+				});
+				document.querySelectorAll('.size').forEach(el => {
+					const size = Number(el.dataset.size);
+					const sizebar = el.querySelector('.sizebar-bar');
+					if (sizebar) {
+						sizebar.style.width = `${size/largest * 100}%`;
+					}
+				});
+			}
+
+			function filter() {
+				if (!filterEl) return;
+				const q = filterEl.value.trim().toLowerCase();
+				document.querySelectorAll('tr.file').forEach(function(el) {
+					if (!q) {
+						el.style.display = '';
+						return;
+					}
+					const nameEl = el.querySelector('.name');
+					const nameVal = nameEl.textContent.trim().toLowerCase();
+					if (nameVal.indexOf(q) !== -1) {
+						el.style.display = '';
+					} else {
+						el.style.display = 'none';
+					}
+				});
+			}
+
+			const filterElem = document.getElementById("filter");
+			if (filterElem) {
+				filterElem.addEventListener("keyup", filter);
+			}
+
+			document.getElementById("layout-list").addEventListener("click", function() {
+				queryParam('layout', '');
+			});
+			document.getElementById("layout-grid").addEventListener("click", function() {
+				queryParam('layout', 'grid');
+			});
+
+			window.addEventListener("load", initPage);
+
+			function queryParam(k, v) {
+				const qs = new URLSearchParams(window.location.search);
+				if (!v) {
+					qs.delete(k);
+				} else {
+					qs.set(k, v);
+				}
+				const qsStr = qs.toString();
+				if (qsStr) {
+					window.location.search = qsStr;
+				} else {
+					window.location = window.location.pathname;
+				}
+			}
+
+			function localizeDatetime(e, index, ar) {
+				if (e.textContent === undefined) {
+					return;
+				}
+				var d = new Date(e.getAttribute('datetime'));
+				if (isNaN(d)) {
+					d = new Date(e.textContent);
+					if (isNaN(d)) {
+						return;
+					}
+				}
+				e.textContent = d.toLocaleString();
+			}
+			var timeList = Array.prototype.slice.call(document.getElementsByTagName("time"));
+			timeList.forEach(localizeDatetime);
+			
+			document.addEventListener("DOMContentLoaded", () => {
+    			const latencyDisplay = document.createElement('div');
+    			latencyDisplay.className = 'latency green';
+	    		latencyDisplay.innerText = '';
+			document.body.appendChild(latencyDisplay);
+				
+    			function updateLatency() {
+        			const startTime = Date.now();
+				fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' })
+            				.then(() => {
+                				const latency = Date.now() - startTime;
+                				if (latency < 100) {
+                    					latencyDisplay.className = 'latency green';
+                				} else if (latency < 300) {
+                    					latencyDisplay.className = 'latency orange';
+                				} else {
+                    					latencyDisplay.className = 'latency red';
+                				}
+                				latencyDisplay.innerText = `${latency} ms`;
+            				})
+            				.catch(() => {
+               	 				latencyDisplay.className = 'latency red';
+                				latencyDisplay.innerText = '';
+            				});
+    			}
+
+    			updateLatency();
+
+    			setInterval(updateLatency, 5000);
+			});
+		</script>
+		<div id="popup1" class="overlay">
+			<div class="popup">
+				<h2 class="info"></h2>
+				<a class="copy hidden" id="copyBtn" onclick="copyToClipboard()">📋</a>
+				<a class="download" id="downloadBtn" onclick="downloadFile()">📥</a>
+				<a class="max" onclick="toggleRestoreModal()">🔎</a>
+				<a class="close" onclick="hideModal()">&times;</a>
+				<div class="content">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
