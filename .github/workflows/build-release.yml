@@ -2,8 +2,8 @@ name: Build releases
 
 on:
   schedule:
-    - cron: "0 3,20 * * *" # 每天北京时间 11:00 和 04:00 自动检测更新
-  workflow_dispatch: # 支持手动一键无感触发
+    - cron: "0 16 * * 0"
+  workflow_dispatch:
 
 permissions:
   contents: write
