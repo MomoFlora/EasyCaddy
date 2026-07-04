@@ -69,68 +69,80 @@ jobs:
             OS: ubuntu-latest
             ARCH: amd64
             OOS: linux
+            DEB_ARCH: amd64
             
           - TARGET: arm64
             OS: ubuntu-latest
             ARCH: arm64
             OOS: linux
+            DEB_ARCH: arm64
             
           - TARGET: mips
             OS: ubuntu-latest
             SOFT: softfloat
             ARCH: mips
             OOS: linux
+            DEB_ARCH: mips
             
           - TARGET: mips64
             OS: ubuntu-latest
             SOFT: softfloat
             ARCH: mips64
             OOS: linux
+            DEB_ARCH: mips64
             
           - TARGET: mips64le
             OS: ubuntu-latest
             SOFT: softfloat
             ARCH: mips64le
             OOS: linux
+            DEB_ARCH: mips64el
             
           - TARGET: mipsel
             OS: ubuntu-latest
             SOFT: softfloat
             ARCH: mipsle
             OOS: linux
+            DEB_ARCH: mipsel
             
           - TARGET: ppc64le
             OS: ubuntu-latest
             ARCH: ppc64le
             OOS: linux
+            DEB_ARCH: ppc64el
 
           - TARGET: s390x
             OS: ubuntu-latest
             ARCH: s390x
             OOS: linux
+            DEB_ARCH: s390x
             
           - TARGET: armv5
             OS: ubuntu-latest
             ARM: 5
             ARCH: arm
             OOS: linux
+            DEB_ARCH: armel
             
           - TARGET: armv6
             OS: ubuntu-latest
             ARM: 6
             ARCH: arm
             OOS: linux
+            DEB_ARCH: armhf
 
           - TARGET: armv7
             OS: ubuntu-latest
             ARM: 7
             ARCH: arm
             OOS: linux
+            DEB_ARCH: armhf
 
           - TARGET: freebsd-x86-64
             OS: ubuntu-latest
             ARCH: amd64
             OOS: freebsd
+            DEB_ARCH: ""
             
     env:
       TAG: ${{ needs.check.outputs.tag }}
@@ -139,6 +151,7 @@ jobs:
       SOFT: ${{ matrix.SOFT }}
       ARM: ${{ matrix.ARM }}
       ARCH: ${{ matrix.ARCH }}
+      DEB_ARCH: ${{ matrix.DEB_ARCH }}
       
     steps:
       - name: 📂 检查代码仓库
@@ -218,6 +231,146 @@ jobs:
           
           echo "BUILD_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')" >> $GITHUB_ENV
 
+      - name: 📦 构建 DEB 安装包
+        if: ${{ matrix.DEB_ARCH != '' }}
+        run: |
+          echo "========================================================="
+          echo "▶️ 开始构建 DEB 安装包 (架构: ${{ env.DEB_ARCH }})..."
+          echo "========================================================="
+          
+          VER="${{ env.TAG }}"
+          VER_CLEAN="${VER#v}"
+          PKG_DIR="/opt/caddy/deb-pkg"
+          
+          # ---------- 创建 DEB 目录结构 ----------
+          mkdir -p "${PKG_DIR}/DEBIAN"
+          mkdir -p "${PKG_DIR}/usr/bin"
+          mkdir -p "${PKG_DIR}/etc/caddy"
+          mkdir -p "${PKG_DIR}/lib/systemd/system"
+          
+          # ---------- 拷贝 caddy 二进制 ----------
+          cp /opt/caddy/caddy-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
+          chmod 755 "${PKG_DIR}/usr/bin/caddy"
+          
+          # ---------- 创建默认 Caddyfile ----------
+          cat > "${PKG_DIR}/etc/caddy/Caddyfile" << 'CADDYFILE_EOF'
+          # The Caddyfile is an easy way to configure your Caddy web server.
+          # See https://caddyserver.com/docs/caddyfile for full documentation.
+          
+          :80 {
+          	root * /var/www/html
+          	file_server
+          }
+          CADDYFILE_EOF
+          
+          # ---------- 创建 caddy.service ----------
+          cat > "${PKG_DIR}/lib/systemd/system/caddy.service" << 'SERVICE_EOF'
+          [Unit]
+          Description=Caddy
+          Documentation=https://caddyserver.com/docs/
+          After=network.target network-online.target
+          Requires=network-online.target
+          
+          [Service]
+          Type=notify
+          User=caddy
+          Group=caddy
+          ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile
+          ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile --force
+          TimeoutStopSec=5s
+          LimitNOFILE=1048576
+          PrivateTmp=true
+          ProtectSystem=full
+          AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+          
+          [Install]
+          WantedBy=multi-user.target
+          SERVICE_EOF
+          
+          # ---------- 创建 postinst 安装后脚本 ----------
+          cat > "${PKG_DIR}/DEBIAN/postinst" << 'POSTINST_EOF'
+          #!/bin/sh
+          set -e
+          
+          # 创建 caddy 系统用户和组（如果不存在）
+          if ! getent group caddy >/dev/null 2>&1; then
+              addgroup --system --quiet caddy
+          fi
+          if ! getent passwd caddy >/dev/null 2>&1; then
+              adduser --system --quiet \
+                  --ingroup caddy \
+                  --home /var/lib/caddy \
+                  --no-create-home \
+                  --disabled-password \
+                  caddy
+          fi
+          
+          # 确保必要目录存在且权限正确
+          mkdir -p /var/www/html /var/lib/caddy
+          chown -R caddy:caddy /var/lib/caddy /var/www/html 2>/dev/null || true
+          
+          # 重载 systemd 并启用服务（不立即启动，由用户自行管理）
+          if command -v systemctl >/dev/null 2>&1; then
+              systemctl daemon-reload 2>/dev/null || true
+          fi
+          
+          echo ""
+          echo "=============================================="
+          echo "  Caddy 安装完成！"
+          echo ""
+          echo "  启动服务:  systemctl start caddy"
+          echo "  开机自启:  systemctl enable caddy"
+          echo "  查看状态:  systemctl status caddy"
+          echo ""
+          echo "  配置文件:  /etc/caddy/Caddyfile"
+          echo "  网页根目录: /var/www/html"
+          echo "=============================================="
+          echo ""
+          POSTINST_EOF
+          chmod 755 "${PKG_DIR}/DEBIAN/postinst"
+          
+          # ---------- 创建 prerm 卸载前脚本 ----------
+          cat > "${PKG_DIR}/DEBIAN/prerm" << 'PRERM_EOF'
+          #!/bin/sh
+          set -e
+          if command -v systemctl >/dev/null 2>&1; then
+              systemctl stop caddy 2>/dev/null || true
+              systemctl disable caddy 2>/dev/null || true
+          fi
+          PRERM_EOF
+          chmod 755 "${PKG_DIR}/DEBIAN/prerm"
+          
+          # ---------- 创建 control 控制文件 ----------
+          cat > "${PKG_DIR}/DEBIAN/control" << EOF
+          Package: caddy
+          Version: ${VER_CLEAN}
+          Architecture: ${{ env.DEB_ARCH }}
+          Maintainer: Auto Build <auto@build.local>
+          Section: web
+          Priority: optional
+          Homepage: https://caddyserver.com
+          Description: Caddy - Fast, extensible multi-platform HTTP/1-2-3 web server
+           Caddy is a powerful, enterprise-ready, open source web server with
+           automatic HTTPS written in Go.
+           .
+           This is a custom multi-architecture build with additional plugins:
+            - caddy-webdav: WebDAV module for Caddy
+            - caddy-cgi: CGI support for Caddy
+            - caddy-exec: Run external commands from Caddy
+          EOF
+          
+          # ---------- 使用 dpkg-deb 打包 ----------
+          DEB_NAME="caddy-${VER_CLEAN}-${{ env.DEB_ARCH }}.deb"
+          dpkg-deb --build "${PKG_DIR}" "/opt/caddy/${DEB_NAME}"
+          
+          echo "========================================================="
+          echo "📊 DEB 安装包信息:"
+          ls -lh "/opt/caddy/${DEB_NAME}"
+          dpkg-deb --info "/opt/caddy/${DEB_NAME}"
+          echo "========================================================="
+          
+          echo "DEB_NAME=${DEB_NAME}" >> $GITHUB_ENV
+
       - name: 📦 发布产物至 GitHub Release
         uses: softprops/action-gh-release@v2.2.1
         with:
@@ -234,6 +387,7 @@ jobs:
             ### 💡 文件说明
             - 带 `-upx` 后缀的固件为经过 **UPX (LZMA)** 深度压缩版，体积更小，特别适合路由器等闪存敏感型嵌入式设备。
             - 常规无后缀固件为原生编译版，执行效率最佳。
+            - `.deb` 安装包可直接在 Debian/Ubuntu 系统上通过 `dpkg -i` 安装，已内置 **caddy.service** 和默认配置。
 
             ### 🧩 本版集成扩展插件列表
             1. 📁 **[caddy-webdav](https://github.com/mholt/caddy-webdav)** - 全功能 WebDAV 服务端原生支持
@@ -241,6 +395,18 @@ jobs:
             3. 🚀 **[caddy-exec](https://github.com/abiosoft/caddy-exec)** - 在特定的 Caddy 路由生命周期内一键执行外部系统指令
 
             ---
+
+            #### 📦 DEB 包安装方式
+            ```bash
+            # 安装
+            sudo dpkg -i caddy-*.deb
+            # 启动
+            sudo systemctl start caddy
+            # 开机自启
+            sudo systemctl enable caddy
+            # 配置文件
+            sudo nano /etc/caddy/Caddyfile
+            ```
 
             #### 🔍 运维实用小贴士
             您可以在下载固件后，通过在终端执行以下命令来快速复核已打包集成的模块：
@@ -252,3 +418,4 @@ jobs:
           files: |
             /opt/caddy/caddy-${{ env.TARGET }}
             /opt/caddy/caddy-${{ env.TARGET }}-upx
+            /opt/caddy/caddy-*.deb
