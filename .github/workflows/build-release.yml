@@ -251,6 +251,9 @@ jobs:
           mkdir -p "${PKG_DIR}/usr/lib/sysusers.d"
           mkdir -p "${PKG_DIR}/usr/share/caddy"
 
+          # 修复 DEBIAN 目录权限（dpkg-deb 要求 0755-0775）
+          chmod 755 "${PKG_DIR}/DEBIAN"
+
           # ---------- 拷贝 caddy 二进制 ----------
           cp /opt/caddy/caddy-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
           chmod 755 "${PKG_DIR}/usr/bin/caddy"
