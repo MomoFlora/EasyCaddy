@@ -211,21 +211,25 @@ jobs:
             --with github.com/mholt/caddy-webdav \
             --with github.com/aksdb/caddy-cgi/v2 \
             --with github.com/abiosoft/caddy-exec
-            
+
+          # 清理版本号前缀（去掉 v）
+          VER_CLEAN="${TAG#v}"
+          echo "🏷️  版本号: ${VER_CLEAN}"
+
           echo "========================================================="
           echo "📊 原始编译文件基本信息:"
           file caddy
           du -h caddy
-          mv caddy caddy-${{ env.TARGET }}
+          mv caddy caddy-${VER_CLEAN}-${{ env.TARGET }}
           echo "========================================================="
-          
+
           # 针对特定兼容架构执行 UPX 固件高强度压缩
           if [[ "${{ env.TARGET }}" != "mips64" && "${{ env.TARGET }}" != "mips64le" && "${{ env.TARGET }}" != "s390x" && "${{ env.TARGET }}" != "freebsd-x86-64" ]]; then
             echo "▶️ 检测到目标架构符合压缩条件，启动 UPX 深度压缩..."
-            cp caddy-${{ env.TARGET }} caddy-${{ env.TARGET }}-upx
-            upx --lzma --best caddy-${{ env.TARGET }}-upx
+            cp caddy-${VER_CLEAN}-${{ env.TARGET }} caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
+            upx --lzma --best caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
             echo "📊 压缩后文件体积:"
-            du -h caddy-${{ env.TARGET }}-upx
+            du -h caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
             echo "========================================================="
           fi
           
@@ -255,7 +259,7 @@ jobs:
           chmod 755 "${PKG_DIR}/DEBIAN"
 
           # ---------- 拷贝 caddy 二进制 ----------
-          cp /opt/caddy/caddy-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
+          cp /opt/caddy/caddy-${VER_CLEAN}-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
           chmod 755 "${PKG_DIR}/usr/bin/caddy"
 
           # ---------- 从仓库拷贝配置文件 ----------
@@ -351,6 +355,6 @@ jobs:
 
             📬 *有关于内核更迭的详细改动细节，请参阅 [Caddy 官方发布日志](https://github.com/caddyserver/caddy/releases)。*
           files: |
-            /opt/caddy/caddy-${{ env.TARGET }}
-            /opt/caddy/caddy-${{ env.TARGET }}-upx
+            /opt/caddy/caddy-*-${{ env.TARGET }}
+            /opt/caddy/caddy-*-${{ env.TARGET }}-upx
             /opt/caddy/caddy-*.deb
