@@ -1,0 +1,15 @@
+Package: caddy
+Version: ${VER_CLEAN}
+Architecture: ${DEB_ARCH}
+Maintainer: EasyCaddy <easycaddy@build.local>
+Section: web
+Priority: optional
+Homepage: https://caddyserver.com
+Description: Caddy - Fast, extensible multi-platform HTTP/1-2-3 web server
+ Caddy is a powerful, enterprise-ready, open source web server with
+ automatic HTTPS written in Go.
+ .
+ This is a custom multi-architecture build with additional plugins:
+  - caddy-webdav: WebDAV module for Caddy
+  - caddy-cgi: CGI support for Caddy
+  - caddy-exec: Run external commands from Caddy
