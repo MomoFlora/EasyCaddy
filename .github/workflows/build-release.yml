@@ -528,15 +528,13 @@ jobs:
       - name: 📝 生成 Release Notes
         run: |
           BUILD_TIME=$(TZ=Asia/Shanghai date '+%Y年%m月%d日 %H:%M:%S')
-          VER="${{ needs.check.outputs.tag }}"
           FINGERPRINT="${{ steps.gpg_setup.outputs.fingerprint }}"
-          REPO="${{ github.repository }}"
 
           cat > /tmp/release-notes.md << 'RELEOF'
           ## 📥 Caddy 多架构自编译固件发布
 
           > 📌 **编译完成时间**：`__BUILD_TIME__`
-          > 🏷️ **集成内核版本**：`__VER__`
+          > 🏷️ **集成内核版本**：`${{ needs.check.outputs.tag }}`
           > 🔑 **GPG 指纹**：`__FINGERPRINT__`
 
           ---
@@ -545,12 +543,12 @@ jobs:
 
           ```bash
           # 1. 下载并安装 GPG 密钥环
-          curl -fsSL https://github.com/__REPO__/releases/latest/download/caddy-archive-keyring.gpg | \
+          curl -fsSL https://github.com/${{ github.repository }}/releases/latest/download/caddy-archive-keyring.gpg | \
             sudo tee /usr/share/keyrings/caddy-archive-keyring.gpg > /dev/null
 
           # 2. 添加 APT 源 (DEB822 格式)
           echo "Types: deb
-          URIs: https://github.com/__REPO__/releases/latest/download/
+          URIs: https://github.com/${{ github.repository }}/releases/latest/download/
           Suites: stable
           Components: main
           Signed-By: /usr/share/keyrings/caddy-archive-keyring.gpg" | \
@@ -599,9 +597,7 @@ jobs:
           RELEOF
 
           sed -i "s/__BUILD_TIME__/${BUILD_TIME}/g" /tmp/release-notes.md
-          sed -i "s/__VER__/${VER}/g" /tmp/release-notes.md
           sed -i "s/__FINGERPRINT__/${FINGERPRINT:-未签名}/g" /tmp/release-notes.md
-          sed -i "s|__REPO__|${REPO}|g" /tmp/release-notes.md
 
           echo "✅ Release Notes 已生成"
 
