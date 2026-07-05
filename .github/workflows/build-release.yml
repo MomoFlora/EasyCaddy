@@ -221,16 +221,16 @@ jobs:
           echo "📊 原始编译文件基本信息:"
           file caddy
           du -h caddy
-          mv caddy caddy-${VER_CLEAN}-${{ env.TARGET }}
+          mv caddy caddy_${VER_CLEAN}_${{ env.TARGET }}
           echo "========================================================="
 
           # 针对特定兼容架构执行 UPX 固件高强度压缩
           if [[ "${{ env.TARGET }}" != "mips64" && "${{ env.TARGET }}" != "mips64le" && "${{ env.TARGET }}" != "s390x" && "${{ env.TARGET }}" != "freebsd-x86-64" ]]; then
             echo "▶️ 检测到目标架构符合压缩条件，启动 UPX 深度压缩..."
-            cp caddy-${VER_CLEAN}-${{ env.TARGET }} caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
-            upx --lzma --best caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
+            cp caddy_${VER_CLEAN}_${{ env.TARGET }} caddy_${VER_CLEAN}_${{ env.TARGET }}_upx
+            upx --lzma --best caddy_${VER_CLEAN}_${{ env.TARGET }}_upx
             echo "📊 压缩后文件体积:"
-            du -h caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
+            du -h caddy_${VER_CLEAN}_${{ env.TARGET }}_upx
             echo "========================================================="
           fi
           
@@ -260,7 +260,7 @@ jobs:
           chmod 755 "${PKG_DIR}/DEBIAN"
 
           # ---------- 拷贝 caddy 二进制 ----------
-          cp /opt/caddy/caddy-${VER_CLEAN}-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
+          cp /opt/caddy/caddy_${VER_CLEAN}_${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
           chmod 755 "${PKG_DIR}/usr/bin/caddy"
 
           # ---------- 从仓库拷贝配置文件 ----------
