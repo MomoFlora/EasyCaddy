@@ -546,13 +546,9 @@ jobs:
           curl -fsSL https://github.com/${{ github.repository }}/releases/latest/download/caddy-archive-keyring.gpg | \
             sudo tee /usr/share/keyrings/caddy-archive-keyring.gpg > /dev/null
 
-          # 2. 添加 APT 源 (DEB822 格式)
-          echo "Types: deb
-          URIs: https://github.com/${{ github.repository }}/releases/latest/download/
-          Suites: ./
-          Components: ./
-          Signed-By: /usr/share/keyrings/caddy-archive-keyring.gpg" | \
-            sudo tee /etc/apt/sources.list.d/caddy.sources
+          # 2. 添加 APT 源
+          echo "deb [signed-by=/usr/share/keyrings/caddy-archive-keyring.gpg] https://github.com/${{ github.repository }}/releases/latest/download/ ./" | \
+            sudo tee /etc/apt/sources.list.d/caddy.list
 
           # 3. 安装 Caddy
           sudo apt update
