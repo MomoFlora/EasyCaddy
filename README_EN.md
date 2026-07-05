@@ -5,7 +5,7 @@
 <h1 align="center">EasyCaddy</h1>
 
 <p align="center">
-  <strong>🛠️ Multi-Architecture Caddy Automated Build Factory</strong>
+  <strong>🛠️ Multi-Architecture Caddy Build Factory · APT Repo with GPG Signing</strong>
 </p>
 
 <p align="center">
@@ -22,15 +22,16 @@
 
 ## 📖 What is EasyCaddy?
 
-**EasyCaddy** is an automated Caddy build pipeline that tracks upstream [Caddy](https://github.com/caddyserver/caddy) releases daily, cross-compiles for **12 architectures**, and publishes the artifacts to GitHub Releases via Actions.
+**EasyCaddy** is an automated Caddy build pipeline that tracks upstream [Caddy](https://github.com/caddyserver/caddy) releases weekly, cross-compiles for **12 architectures**, and publishes a **GPG-signed APT repository** alongside raw binaries via GitHub Releases.
 
 It applies several source-level optimizations — cleaning up verbose version output, fixing GOMAXPROCS warnings, and replacing the default directory listing with an enhanced one. Three hand-picked plugins are baked in, and every Linux build ships as a ready-to-use `.deb` package with full systemd integration.
 
 ## ✨ Key Features
 
-- **🔄 Auto-Tracking** — Checks for new upstream Caddy releases twice daily (UTC 19:00 & 12:00). Manual dispatch also supported.
+- **🔄 Auto-Tracking** — Weekly check for new upstream Caddy releases. Manual dispatch also supported.
 - **🧬 12 Architectures** — `amd64` `arm64` `armv5` `armv6` `armv7` `mips` `mipsel` `mips64` `mips64le` `ppc64le` `s390x` `freebsd-x86-64`
-- **📦 Turnkey DEB Packages** — Ships with systemd units (Caddyfile + API mode), default index page, sysusers config, and proper maintainer scripts.
+- **📦 APT Repo + GPG Signing** — GitHub Releases serve as an APT source with `InRelease` / `Release.gpg` verification.
+- **🔐 Turnkey DEB Packages** — Ships with systemd units (Caddyfile + API mode), default index page, sysusers config, and proper maintainer scripts.
 - **🗜️ UPX Compression** — All binaries (except mips64 / mips64le / s390x / FreeBSD) are compressed with UPX LZMA at maximum level, reducing size by 60%+.
 - **🔧 Source Patches** — GOMAXPROCS fix, clean version info, enhanced browse.html.
 - **🧩 Bundled Plugins** — WebDAV, CGI support, and command execution hooks.
@@ -45,16 +46,38 @@ It applies several source-level optimizations — cleaning up verbose version ou
 
 ## 🚀 Quick Start
 
-### Option 1: DEB Package (Recommended · Debian/Ubuntu)
+### Option 1: APT Repository (Recommended · GPG Verified)
+
+```bash
+# 1. Download and install the GPG keyring
+curl -fsSL https://github.com/MomoFlora/EasyCaddy/releases/latest/download/caddy-archive-keyring.gpg | \
+  sudo tee /usr/share/keyrings/caddy-archive-keyring.gpg > /dev/null
+
+# 2. Add the APT source
+echo "deb [signed-by=/usr/share/keyrings/caddy-archive-keyring.gpg] https://github.com/MomoFlora/EasyCaddy/releases/latest/download/ ./" | \
+  sudo tee /etc/apt/sources.list.d/caddy.list
+
+# 3. Install Caddy
+sudo apt update
+sudo apt install caddy
+
+# 4. Start the service
+sudo systemctl start caddy
+sudo systemctl enable caddy
+```
+
+Visit `http://<your-ip>` to see the default landing page.
+
+> 💡 Updates: `sudo apt update && sudo apt upgrade` will automatically pull the latest version.
+
+### Option 2: Manual DEB Installation
 
 ```bash
 # Download the .deb for your architecture from Releases
-sudo dpkg -i caddy-<version>-<arch>.deb
+sudo dpkg -i caddy_<version>_<arch>.deb
 
 # Start the service
 sudo systemctl start caddy
-
-# Enable at boot
 sudo systemctl enable caddy
 
 # Edit your config
@@ -64,24 +87,22 @@ sudo nano /etc/caddy/Caddyfile
 sudo systemctl reload caddy
 ```
 
-Visit `http://<your-ip>` to see the default landing page.
-
 > 💡 Two service modes available:
 > - `caddy.service` — Caddyfile-based configuration (default)
 > - `caddy-api.service` — API-driven dynamic configuration
 
-### Option 2: Standalone Binary
+### Option 3: Standalone Binary
 
 ```bash
 # Download the binary for your architecture from Releases
-chmod +x caddy-<arch>
-./caddy-<arch> run --config /path/to/Caddyfile
+chmod +x caddy_<version>_<arch>
+./caddy_<version>_<arch> run --config /path/to/Caddyfile
 ```
 
 ### Verify Bundled Modules
 
 ```bash
-./caddy list-modules -s
+caddy list-modules -s
 ```
 
 ## 📁 DEB Package Layout
@@ -102,6 +123,19 @@ chmod +x caddy-<arch>
     └── postrm                        # Post-remove hook
 ```
 
+## 🏗️ APT Repository Structure
+
+Each Release ships a complete APT repository alongside the binaries:
+
+| File | Description |
+|------|-------------|
+| `InRelease` | Clearsigned Release file (inline GPG signature) |
+| `Release.gpg` | Detached GPG signature |
+| `Release` | Repository index with checksums |
+| `Packages` / `Packages.gz` | Package index |
+| `caddy-archive-keyring.gpg` | GPG public keyring (binary) |
+| `caddy-archive-keyring.asc` | GPG public key (ASCII) |
+
 ## 🔧 Customization
 
 Fork this repo and tweak the following to build your own flavor:
@@ -112,9 +146,21 @@ Fork this repo and tweak the following to build your own flavor:
 | `Caddy/Caddyfile` | Default Caddy config shipped in DEB |
 | `Caddy/index.html` | Default landing page |
 | `Caddy/caddy.service` | systemd service definitions |
+| `Scripts/control` | DEB package control metadata template |
 | `Scripts/postinstall.sh` | DEB post-install hook |
 | `Scripts/preremove.sh` | DEB pre-remove hook |
 | `Scripts/postremove.sh` | DEB post-remove hook |
+
+### GPG Signing
+
+To sign the APT repository with your own GPG key, add these secrets to your repository:
+
+| Secret | Description |
+|--------|-------------|
+| `GPG_PRIVATE_KEY` | GPG private key (ASCII armor format) |
+| `GPG_PASSPHRASE` | GPG key passphrase (leave unset if no passphrase) |
+
+If not configured, a temporary key will be auto-generated per build (not recommended for production).
 
 ## 🧪 Source Modifications
 

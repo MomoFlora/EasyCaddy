@@ -168,6 +168,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: ${{ steps.go_version.outputs.version }}
+          cache: false
 
       - name: 🗜️ 安装 UPX 压缩工具
         uses: crazy-max/ghaction-upx@v4
@@ -220,16 +221,16 @@ jobs:
           echo "📊 原始编译文件基本信息:"
           file caddy
           du -h caddy
-          mv caddy caddy-${VER_CLEAN}-${{ env.TARGET }}
+          mv caddy caddy_${VER_CLEAN}_${{ env.TARGET }}
           echo "========================================================="
 
           # 针对特定兼容架构执行 UPX 固件高强度压缩
           if [[ "${{ env.TARGET }}" != "mips64" && "${{ env.TARGET }}" != "mips64le" && "${{ env.TARGET }}" != "s390x" && "${{ env.TARGET }}" != "freebsd-x86-64" ]]; then
             echo "▶️ 检测到目标架构符合压缩条件，启动 UPX 深度压缩..."
-            cp caddy-${VER_CLEAN}-${{ env.TARGET }} caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
-            upx --lzma --best caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
+            cp caddy_${VER_CLEAN}_${{ env.TARGET }} caddy_${VER_CLEAN}_${{ env.TARGET }}_upx
+            upx --lzma --best caddy_${VER_CLEAN}_${{ env.TARGET }}_upx
             echo "📊 压缩后文件体积:"
-            du -h caddy-${VER_CLEAN}-${{ env.TARGET }}-upx
+            du -h caddy_${VER_CLEAN}_${{ env.TARGET }}_upx
             echo "========================================================="
           fi
           
@@ -259,7 +260,7 @@ jobs:
           chmod 755 "${PKG_DIR}/DEBIAN"
 
           # ---------- 拷贝 caddy 二进制 ----------
-          cp /opt/caddy/caddy-${VER_CLEAN}-${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
+          cp /opt/caddy/caddy_${VER_CLEAN}_${{ env.TARGET }} "${PKG_DIR}/usr/bin/caddy"
           chmod 755 "${PKG_DIR}/usr/bin/caddy"
 
           # ---------- 从仓库拷贝配置文件 ----------
@@ -286,7 +287,7 @@ jobs:
           echo "✅ 已从仓库拷贝脚本: control"
 
           # ---------- 使用 dpkg-deb 打包 ----------
-          DEB_NAME="caddy-${VER_CLEAN}-${{ env.DEB_ARCH }}.deb"
+          DEB_NAME="caddy_${VER_CLEAN}_${{ env.DEB_ARCH }}.deb"
           dpkg-deb --build "${PKG_DIR}" "/opt/caddy/${DEB_NAME}"
           
           echo "========================================================="
@@ -297,51 +298,311 @@ jobs:
           
           echo "DEB_NAME=${DEB_NAME}" >> $GITHUB_ENV
 
-      - name: 📦 发布产物至 GitHub Release
+      - name: 📤 上传构建产物
+        uses: actions/upload-artifact@v7
+        with:
+          name: caddy-${{ matrix.TARGET }}
+          path: |
+            /opt/caddy/caddy*
+          if-no-files-found: error
+
+  # =================================================================
+  # 3. 创建 Release + 构建 APT 仓库 (GPG 签名)
+  # =================================================================
+  create-release:
+    name: 🚀 创建 Release & APT 仓库
+    needs: [check, build]
+    if: ${{ needs.check.outputs.triggered == 'true' || (needs.check.outputs.tag != needs.check.outputs.ver) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📂 检查代码仓库
+        uses: actions/checkout@v7
+
+      - name: 📥 下载所有构建产物
+        uses: actions/download-artifact@v4
+        with:
+          path: output
+          merge-multiple: true
+
+      - name: 📋 整理产物列表
+        run: |
+          echo "========================================================="
+          echo "📊 待发布产物清单:"
+          echo "========================================================="
+          find output -type f | sort | while read f; do
+            echo "  → $(basename "$f") ($(du -h "$f" | cut -f1))"
+          done
+          TOTAL_FILES=$(find output -type f | wc -l)
+          TOTAL_SIZE=$(du -sh output | cut -f1)
+          echo "📦 总计 ${TOTAL_FILES} 个文件，总大小 ${TOTAL_SIZE}"
+          echo "========================================================="
+
+      - name: 🔧 安装 APT 仓库构建工具
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq dpkg-dev apt-utils gnupg
+
+      - name: 🔑 准备 GPG 签名密钥
+        id: gpg_setup
+        run: |
+          echo "========================================================="
+          echo "▶️ 准备 GPG 签名密钥..."
+          echo "========================================================="
+
+          # 修复 GPG homedir 权限 (CI 环境必需)
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          find ~/.gnupg -type f -exec chmod 600 {} \; 2>/dev/null || true
+
+          # gpg-agent.conf 只能写 agent 自身的选项
+          cat > ~/.gnupg/gpg-agent.conf << 'AGENTCONF'
+          allow-loopback-pinentry
+          AGENTCONF
+
+          # 清理残留 agent，确保干净启动
+          gpgconf --kill all 2>/dev/null || true
+          gpg-connect-agent /bye 2>/dev/null || true
+          echo "✅ GPG 环境初始化完成"
+
+          GPG_PUBLIC_KEY="${GITHUB_WORKSPACE}/output/caddy-archive-keyring.gpg"
+
+          if [[ -n "${{ secrets.GPG_PRIVATE_KEY }}" ]]; then
+            # ===== 使用仓库预设的 GPG 密钥 =====
+            echo "🔑 导入预设 GPG 私钥..."
+            echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --pinentry-mode loopback --import 2>&1
+            IMPORT_OK=$?
+
+            FINGERPRINT=$(gpg --list-secret-keys --with-colons --keyid-format LONG 2>/dev/null | grep "^sec:" | head -1 | cut -d: -f5)
+
+            if [[ ${IMPORT_OK} -ne 0 || -z "${FINGERPRINT}" ]]; then
+              echo "❌ GPG 私钥导入失败! 请检查 GPG_PRIVATE_KEY 和 GPG_PASSPHRASE secret"
+              exit 1
+            fi
+            echo "✅ GPG 私钥已导入 (指纹: ${FINGERPRINT})"
+
+            # 导出公钥 (二进制 .gpg + ASCII .asc)
+            gpg --export "${FINGERPRINT}" > "${GPG_PUBLIC_KEY}"
+            gpg --export --armor "${FINGERPRINT}" > "${GITHUB_WORKSPACE}/output/caddy-archive-keyring.asc"
+            echo "📤 公钥已导出"
+
+            # 构建签名选项
+            SIGN_OPTS="--batch --yes --pinentry-mode loopback --no-tty"
+            if [[ -n "${{ secrets.GPG_PASSPHRASE }}" ]]; then
+              SIGN_OPTS="${SIGN_OPTS} --passphrase ${{ secrets.GPG_PASSPHRASE }}"
+              echo "🔐 已配置 passphrase"
+            else
+              echo "💡 未设置 GPG_PASSPHRASE (假设密钥无密码)"
+            fi
+
+          else
+            # ===== 生成临时 GPG 密钥对 =====
+            echo "⚠️  未检测到 GPG_PRIVATE_KEY，生成临时密钥..."
+            echo "💡 建议: 在 Secrets 中设置 GPG_PRIVATE_KEY 以保持密钥一致性"
+
+            gpg --batch --pinentry-mode loopback --no-tty --quick-generate-key \
+              "EasyCaddy APT Repository <easycaddy@build.local>" \
+              rsa4096 sign 2y
+
+            FINGERPRINT=$(gpg --list-secret-keys --with-colons --keyid-format LONG 2>/dev/null | grep "^sec:" | head -1 | cut -d: -f5)
+
+            if [[ -z "${FINGERPRINT}" ]]; then
+              echo "❌ 临时 GPG 密钥生成失败!"
+              exit 1
+            fi
+            echo "✅ 临时 GPG 密钥已生成 (指纹: ${FINGERPRINT})"
+
+            gpg --export "${FINGERPRINT}" > "${GPG_PUBLIC_KEY}"
+            gpg --export --armor "${FINGERPRINT}" > "${GITHUB_WORKSPACE}/output/caddy-archive-keyring.asc"
+            echo "📤 公钥已导出"
+
+            SIGN_OPTS="--batch --yes --pinentry-mode loopback --no-tty"
+          fi
+
+          echo "fingerprint=${FINGERPRINT}" >> $GITHUB_OUTPUT
+          echo "sign_opts=${SIGN_OPTS}" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ 构建 APT 仓库
+        run: |
+          echo "========================================================="
+          echo "▶️ 构建 APT 仓库..."
+          echo "========================================================="
+
+          VER="${{ needs.check.outputs.tag }}"
+          VER_CLEAN="${VER#v}"
+          cd output
+
+          # ---------- 收集架构列表 ----------
+          DEB_ARCH_LIST=""
+          for deb in *.deb; do
+            [[ -f "$deb" ]] || continue
+            arch=$(dpkg-deb --field "$deb" Architecture)
+            if [[ -n "$arch" ]]; then
+              DEB_ARCH_LIST="${DEB_ARCH_LIST} ${arch}"
+            fi
+          done
+          DEB_ARCH_LIST=$(echo "$DEB_ARCH_LIST" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+          echo "📋 检测到 DEB 架构: ${DEB_ARCH_LIST}"
+
+          # ---------- 生成 Packages 索引 ----------
+          echo "📝 生成 Packages 索引..."
+          apt-ftparchive packages . > Packages
+
+          DEB_COUNT=$(grep -c "^Package:" Packages || echo "0")
+          echo "   → ${DEB_COUNT} 个包"
+          gzip -9c Packages > Packages.gz
+          echo "✅ Packages + Packages.gz 已生成"
+
+          # ---------- 生成 Release 文件 ----------
+          echo "📝 生成 Release 索引文件..."
+          cat > Release << RELEOF
+          Origin: EasyCaddy
+          Label: EasyCaddy APT Repository
+          Suite: ./
+          Codename: ./
+          Version: ${VER_CLEAN}
+          Architectures: ${DEB_ARCH_LIST}
+          Components: ./
+          Description: EasyCaddy - Multi-architecture Caddy builds with bundled plugins
+          Date: $(date -Ru)
+          RELEOF
+
+          # 用 apt-ftparchive 追加文件校验和
+          apt-ftparchive release . >> Release
+          echo "✅ Release 已生成"
+
+          echo "========================================================="
+          echo "📊 APT 仓库文件:"
+          ls -lh InRelease Release Release.gpg Packages Packages.gz 2>/dev/null || true
+          ls -lh *.deb | wc -l | xargs echo "DEB 包数量:"
+          echo "========================================================="
+
+      - name: ✍️ GPG 签名 Release 文件
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          cd output
+
+          SIGN_OPTS='${{ steps.gpg_setup.outputs.sign_opts }}'
+
+          if [[ -n "${{ steps.gpg_setup.outputs.fingerprint }}" ]]; then
+            echo "✍️  签名 Release 文件..."
+            echo "🔍 可用签名密钥:"
+            gpg --list-secret-keys --keyid-format LONG
+
+            # InRelease (内联签名)
+            gpg ${SIGN_OPTS} --clearsign -o InRelease Release
+            echo "✅ InRelease 已生成"
+
+            # Release.gpg (分离签名)
+            gpg ${SIGN_OPTS} --detach-sign --armor -o Release.gpg Release
+            echo "✅ Release.gpg 已生成"
+          else
+            echo "⚠️  无 GPG 密钥，跳过签名"
+          fi
+
+          echo "========================================================="
+          echo "📊 最终 APT 仓库文件:"
+          ls -lh InRelease Release Release.gpg Packages Packages.gz *.deb caddy-archive-keyring.* 2>/dev/null || true
+          echo "========================================================="
+
+      - name: 🧹 清理空文件
+        run: |
+          echo "▶️ 清理空文件 (防止 GitHub API 拒绝 size=0)..."
+          EMPTY_FILES=$(find output -type f -size 0 2>/dev/null)
+          if [[ -n "$EMPTY_FILES" ]]; then
+            echo "⚠️  发现空文件，正在删除:"
+            echo "$EMPTY_FILES"
+            find output -type f -size 0 -delete
+          else
+            echo "✅ 无空文件"
+          fi
+          find output -type d -empty -delete 2>/dev/null || true
+
+          echo "📊 最终待发布文件清单:"
+          find output -type f -size +0 | sort | while read f; do
+            echo "  → ${f#output/} ($(du -h "$f" | cut -f1))"
+          done
+          TOTAL=$(find output -type f -size +0 | wc -l)
+          echo "📦 总计 ${TOTAL} 个有效文件"
+
+      - name: 📝 生成 Release Notes
+        run: |
+          BUILD_TIME=$(TZ=Asia/Shanghai date '+%Y年%m月%d日 %H:%M:%S')
+          FINGERPRINT="${{ steps.gpg_setup.outputs.fingerprint }}"
+
+          cat > /tmp/release-notes.md << 'RELEOF'
+          ## 📥 Caddy 多架构自编译固件发布
+
+          > 📌 **编译完成时间**：`__BUILD_TIME__`
+          > 🏷️ **集成内核版本**：`${{ needs.check.outputs.tag }}`
+          > 🔑 **GPG 指纹**：`__FINGERPRINT__`
+
+          ---
+
+          ### 🔑 APT 仓库安装 (推荐 · 带 GPG 验证)
+
+          ```bash
+          # 1. 下载并安装 GPG 密钥环
+          curl -fsSL https://github.com/${{ github.repository }}/releases/latest/download/caddy-archive-keyring.gpg | \
+            sudo tee /usr/share/keyrings/caddy-archive-keyring.gpg > /dev/null
+
+          # 2. 添加 APT 源
+          echo "deb [signed-by=/usr/share/keyrings/caddy-archive-keyring.gpg] https://github.com/${{ github.repository }}/releases/latest/download/ ./" | \
+            sudo tee /etc/apt/sources.list.d/caddy.list
+
+          # 3. 安装 Caddy
+          sudo apt update
+          sudo apt install caddy
+
+          # 4. 启动服务
+          sudo systemctl start caddy
+          sudo systemctl enable caddy
+          ```
+
+          > 📖 **说明**: 本 APT 仓库的所有元数据与 deb 包均通过 GitHub Releases 直接提供。安装密钥环后，`apt update` 即可自动获取更新。
+
+          ---
+
+          ### 💡 文件说明
+          - 带 `-upx` 后缀的固件为 **UPX (LZMA)** 深度压缩版，体积更小，适合嵌入式设备
+          - 常规无后缀固件为原生编译版，执行效率最佳
+          - `.deb` 安装包可直接通过 APT 或 `dpkg -i` 安装
+          - `InRelease` / `Release.gpg` — GPG 签名文件，用于 APT 安全验证
+          - `caddy-archive-keyring.gpg` — APT 公钥密钥环
+
+          ### 🧩 本版集成扩展插件列表
+          1. 📁 **[caddy-webdav](https://github.com/mholt/caddy-webdav)** — 全功能 WebDAV 服务端原生支持
+          2. ⚙️ **[caddy-cgi](https://github.com/aksdb/caddy-cgi/v2)** — 传统 CGI 脚本/网关协议互联
+          3. 🚀 **[caddy-exec](https://github.com/abiosoft/caddy-exec)** — 在特定的 Caddy 路由生命周期内一键执行外部系统指令
+
+          ---
+
+          #### 📦 手动 DEB 安装
+          ```bash
+          sudo dpkg -i caddy_*_<arch>.deb
+          sudo systemctl start caddy
+          sudo systemctl enable caddy
+          ```
+
+          #### 🔍 验证已集成的模块
+          ```bash
+          ./caddy list-modules -s
+          ```
+
+          📬 *有关于内核更迭的详细改动细节，请参阅 [Caddy 官方发布日志](https://github.com/caddyserver/caddy/releases)。*
+          RELEOF
+
+          sed -i "s/__BUILD_TIME__/${BUILD_TIME}/g" /tmp/release-notes.md
+          sed -i "s/__FINGERPRINT__/${FINGERPRINT:-未签名}/g" /tmp/release-notes.md
+
+          echo "✅ Release Notes 已生成"
+
+      - name: 🚀 创建 GitHub Release
         uses: softprops/action-gh-release@v3.0.1
         with:
-          token: ${{ github.token }}
-          tag_name: ${{ env.TAG }}
-          body: |
-            ## 📥 Caddy 多架构自编译固件发布
-
-            > 📌 **编译完成时间**：`${{ env.BUILD_TIME }}`
-            > 🏷️ **集成内核版本**：`${{ env.TAG }}`
-
-            ---
-
-            ### 💡 文件说明
-            - 带 `-upx` 后缀的固件为经过 **UPX (LZMA)** 深度压缩版，体积更小，特别适合路由器等闪存敏感型嵌入式设备。
-            - 常规无后缀固件为原生编译版，执行效率最佳。
-            - `.deb` 安装包可直接在 Debian/Ubuntu 系统上通过 `dpkg -i` 安装，已内置 **caddy.service** 和默认配置。
-
-            ### 🧩 本版集成扩展插件列表
-            1. 📁 **[caddy-webdav](https://github.com/mholt/caddy-webdav)** - 全功能 WebDAV 服务端原生支持
-            2. ⚙️ **[caddy-cgi](https://github.com/aksdb/caddy-cgi/v2)** - 传统 CGI 脚本/网关协议互联
-            3. 🚀 **[caddy-exec](https://github.com/abiosoft/caddy-exec)** - 在特定的 Caddy 路由生命周期内一键执行外部系统指令
-
-            ---
-
-            #### 📦 DEB 包安装方式
-            ```bash
-            # 安装
-            sudo dpkg -i caddy-*.deb
-            # 启动
-            sudo systemctl start caddy
-            # 开机自启
-            sudo systemctl enable caddy
-            # 配置文件
-            sudo nano /etc/caddy/Caddyfile
-            ```
-
-            #### 🔍 运维实用小贴士
-            您可以在下载固件后，通过在终端执行以下命令来快速复核已打包集成的模块：
-            ```bash
-            ./caddy list-modules -s
-            ```
-
-            📬 *有关于内核更迭的详细改动细节，请参阅 [Caddy 官方发布日志](https://github.com/caddyserver/caddy/releases)。*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ needs.check.outputs.tag }}
+          body_path: /tmp/release-notes.md
           files: |
-            /opt/caddy/caddy-*-${{ env.TARGET }}
-            /opt/caddy/caddy-*-${{ env.TARGET }}-upx
-            /opt/caddy/caddy-*.deb
+            output/*
+          draft: false

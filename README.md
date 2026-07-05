@@ -5,7 +5,7 @@
 <h1 align="center">EasyCaddy</h1>
 
 <p align="center">
-  <strong>🛠️ 多架构 Caddy 自动构建工厂</strong>
+  <strong>🛠️ 多架构 Caddy 自动构建工厂 · APT 仓库 + GPG 签名</strong>
 </p>
 
 <p align="center">
@@ -22,15 +22,16 @@
 
 ## 📖 这是什么？
 
-**EasyCaddy** 是一个自动化 Caddy 构建项目，每天定时追踪 [Caddy 官方](https://github.com/caddyserver/caddy) 最新版本，交叉编译 **12 种架构** 的二进制文件，并通过 GitHub Actions 自动发布到 Releases。
+**EasyCaddy** 是一个自动化 Caddy 构建项目，每周定时追踪 [Caddy 官方](https://github.com/caddyserver/caddy) 最新版本，交叉编译 **12 种架构** 的二进制文件，并构建带 **GPG 签名** 的 APT 仓库，通过 GitHub Releases 自动发布。
 
 项目对 Caddy 源码进行了多项魔改优化，剔除了模块依赖路径输出，让 `caddy version` 显示更干净。同时集成了三款实用插件，并将二进制制作成开箱即用的 `.deb` 安装包。
 
 ## ✨ 核心特性
 
-- **🔄 自动追踪更新** — 每天 11:00 / 04:00（北京时间）自动检测官方新版本，有更新即触发编译；也支持手动一键触发
+- **🔄 自动追踪更新** — 每周自动检测官方新版本，有更新即触发编译；也支持手动一键触发
 - **🧬 12 架构覆盖** — `amd64` `arm64` `armv5` `armv6` `armv7` `mips` `mipsel` `mips64` `mips64le` `ppc64le` `s390x` `freebsd-x86-64`
-- **📦 开箱即用的 DEB 包** — 内置 systemd 服务文件（Caddyfile 模式 + API 模式）、默认主页、sysusers 配置，装上即用
+- **📦 APT 仓库 + GPG 签名** — GitHub Releases 即 APT 源，带 `InRelease` / `Release.gpg` 签名验证
+- **🔐 开箱即用的 DEB 包** — 内置 systemd 服务文件（Caddyfile 模式 + API 模式）、默认主页、sysusers 配置，装上即用
 - **🗜️ UPX 深度压缩** — 除 mips64 / mips64le / s390x / FreeBSD 外，所有二进制均经 UPX LZMA 最高级别压缩，体积缩减 60%+
 - **🔧 源码魔改优化** — 修复 GOMAXPROCS 警告、精简版本信息输出、替换增强版目录浏览页面
 - **🧩 集成实用插件** — WebDAV 文件共享、CGI 脚本支持、路由生命周期命令执行
@@ -45,16 +46,38 @@
 
 ## 🚀 快速开始
 
-### 方式一：DEB 包安装（推荐 · Debian/Ubuntu）
+### 方式一：APT 仓库安装（推荐 · 带 GPG 验证）
+
+```bash
+# 1. 下载并安装 GPG 密钥环
+curl -fsSL https://github.com/MomoFlora/EasyCaddy/releases/latest/download/caddy-archive-keyring.gpg | \
+  sudo tee /usr/share/keyrings/caddy-archive-keyring.gpg > /dev/null
+
+# 2. 添加 APT 源
+echo "deb [signed-by=/usr/share/keyrings/caddy-archive-keyring.gpg] https://github.com/MomoFlora/EasyCaddy/releases/latest/download/ ./" | \
+  sudo tee /etc/apt/sources.list.d/caddy.list
+
+# 3. 安装 Caddy
+sudo apt update
+sudo apt install caddy
+
+# 4. 启动服务
+sudo systemctl start caddy
+sudo systemctl enable caddy
+```
+
+安装完成后访问 `http://<你的IP>` 即可看到默认欢迎页面。
+
+> 💡 更新：`sudo apt update && sudo apt upgrade` 即可自动升级到最新版。
+
+### 方式二：手动 DEB 安装
 
 ```bash
 # 从 Releases 下载对应架构的 .deb 包
-sudo dpkg -i caddy-<version>-<arch>.deb
+sudo dpkg -i caddy_<version>_<arch>.deb
 
 # 启动服务
 sudo systemctl start caddy
-
-# 设置开机自启
 sudo systemctl enable caddy
 
 # 编辑配置
@@ -64,24 +87,22 @@ sudo nano /etc/caddy/Caddyfile
 sudo systemctl reload caddy
 ```
 
-安装完成后访问 `http://<你的IP>` 即可看到默认欢迎页面。
-
 > 💡 两种服务模式可选：
 > - `caddy.service` — 基于 Caddyfile 配置文件模式（默认）
 > - `caddy-api.service` — 基于 API 动态配置模式
 
-### 方式二：直接使用二进制
+### 方式三：直接使用二进制
 
 ```bash
 # 从 Releases 下载对应架构的二进制文件
-chmod +x caddy-<arch>
-./caddy-<arch> run --config /path/to/Caddyfile
+chmod +x caddy_<version>_<arch>
+./caddy_<version>_<arch> run --config /path/to/Caddyfile
 ```
 
 ### 验证已集成的模块
 
 ```bash
-./caddy list-modules -s
+caddy list-modules -s
 ```
 
 ## 📁 DEB 包文件结构
@@ -102,6 +123,19 @@ chmod +x caddy-<arch>
     └── postrm                        # 卸载后脚本
 ```
 
+## 🏗️ APT 仓库结构
+
+每次 Release 发布同时包含完整的 APT 仓库元数据：
+
+| 文件 | 说明 |
+|------|------|
+| `InRelease` | 内联 GPG 签名的 Release 文件 |
+| `Release.gpg` | 分离 GPG 签名 |
+| `Release` | 仓库索引（含校验和） |
+| `Packages` / `Packages.gz` | 软件包索引 |
+| `caddy-archive-keyring.gpg` | GPG 公钥密钥环 |
+| `caddy-archive-keyring.asc` | GPG 公钥（ASCII 格式） |
+
 ## 🔧 自定义
 
 如果你想定制自己的 Caddy 构建，可以 fork 此仓库并修改：
@@ -112,9 +146,21 @@ chmod +x caddy-<arch>
 | `Caddy/Caddyfile` | DEB 包默认 Caddy 配置 |
 | `Caddy/index.html` | 默认欢迎页面 |
 | `Caddy/caddy.service` | systemd 服务定义 |
+| `Scripts/control` | DEB 包 control 元信息模板 |
 | `Scripts/postinstall.sh` | DEB 安装后钩子脚本 |
 | `Scripts/preremove.sh` | DEB 卸载前钩子脚本 |
 | `Scripts/postremove.sh` | DEB 卸载后钩子脚本 |
+
+### GPG 签名配置
+
+如需使用自己的 GPG 密钥签名 APT 仓库，在仓库 Secrets 中设置：
+
+| Secret | 说明 |
+|--------|------|
+| `GPG_PRIVATE_KEY` | GPG 私钥（ASCII armor 格式） |
+| `GPG_PASSPHRASE` | GPG 密钥密码（未设密码则不需要） |
+
+未设置则自动生成临时密钥（每次构建不同，不推荐正式使用）。
 
 ## 🧪 源码魔改细节
 
