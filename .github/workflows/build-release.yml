@@ -279,24 +279,11 @@ jobs:
 
           echo "✅ 已从仓库拷贝脚本: postinst, prerm, postrm"
 
-          # ---------- 创建 control 控制文件 ----------
-          cat > "${PKG_DIR}/DEBIAN/control" << EOF
-          Package: caddy
-          Version: ${VER_CLEAN}
-          Architecture: ${{ env.DEB_ARCH }}
-          Maintainer: Auto Build <auto@build.local>
-          Section: web
-          Priority: optional
-          Homepage: https://caddyserver.com
-          Description: Caddy - Fast, extensible multi-platform HTTP/1-2-3 web server
-           Caddy is a powerful, enterprise-ready, open source web server with
-           automatic HTTPS written in Go.
-           .
-           This is a custom multi-architecture build with additional plugins:
-            - caddy-webdav: WebDAV module for Caddy
-            - caddy-cgi: CGI support for Caddy
-            - caddy-exec: Run external commands from Caddy
-          EOF
+          # ---------- 从仓库拷贝 control 控制文件 ----------
+          cp "${WORKSPACE}/Scripts/control" "${PKG_DIR}/DEBIAN/control"
+          sed -i "s/\${VER_CLEAN}/${VER_CLEAN}/g" "${PKG_DIR}/DEBIAN/control"
+          sed -i "s/\${DEB_ARCH}/${{ env.DEB_ARCH }}/g" "${PKG_DIR}/DEBIAN/control"
+          echo "✅ 已从仓库拷贝脚本: control"
 
           # ---------- 使用 dpkg-deb 打包 ----------
           DEB_NAME="caddy-${VER_CLEAN}-${{ env.DEB_ARCH }}.deb"
