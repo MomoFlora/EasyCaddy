@@ -287,7 +287,7 @@ jobs:
           echo "✅ 已从仓库拷贝脚本: control"
 
           # ---------- 使用 dpkg-deb 打包 ----------
-          DEB_NAME="caddy-${VER_CLEAN}-${{ env.DEB_ARCH }}.deb"
+          DEB_NAME="caddy_${VER_CLEAN}_${{ env.DEB_ARCH }}.deb"
           dpkg-deb --build "${PKG_DIR}" "/opt/caddy/${DEB_NAME}"
           
           echo "========================================================="
