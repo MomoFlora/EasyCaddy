@@ -435,7 +435,7 @@ jobs:
           DEB_ARCH_LIST=""
           for deb in *.deb; do
             [[ -f "$deb" ]] || continue
-            arch=$(dpkg-deb --info "$deb" 2>/dev/null | grep "^ Architecture:" | head -1 | awk '{print $2}')
+            arch=$(dpkg-deb --field "$deb" Architecture)
             if [[ -n "$arch" ]]; then
               DEB_ARCH_LIST="${DEB_ARCH_LIST} ${arch}"
             fi
@@ -445,7 +445,7 @@ jobs:
 
           # ---------- 生成 Packages 索引 ----------
           echo "📝 生成 Packages 索引..."
-          dpkg-scanpackages . /dev/null > Packages
+          apt-ftparchive packages . > Packages
 
           DEB_COUNT=$(grep -c "^Package:" Packages || echo "0")
           echo "   → ${DEB_COUNT} 个包"
