@@ -599,26 +599,11 @@ jobs:
           echo "✅ Release Notes 已生成"
 
       - name: 🚀 创建 GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TAG="${{ needs.check.outputs.tag }}"
-
-          echo "========================================================="
-          echo "▶️ 创建 GitHub Release: ${TAG}..."
-          echo "========================================================="
-
-          # 收集所有有效文件 (排除空文件和目录)
-          FILES=($(find output -type f -size +0))
-          FILE_COUNT=${#FILES[@]}
-
-          echo "📤 准备上传 ${FILE_COUNT} 个文件..."
-
-          # 创建 Release 并上传所有文件
-          gh release create "${TAG}" \
-            "${FILES[@]}" \
-            --title "Caddy ${TAG} — 多架构自编译版" \
-            --notes-file /tmp/release-notes.md \
-            --draft=false
-
-          echo "✅ Release 创建完成!"
+        uses: softprops/action-gh-release@v3.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ needs.check.outputs.tag }}
+          body_path: /tmp/release-notes.md
+          files: |
+            output/*
+          draft: false
