@@ -168,6 +168,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: ${{ steps.go_version.outputs.version }}
+          cache: false
 
       - name: 🗜️ 安装 UPX 压缩工具
         uses: crazy-max/ghaction-upx@v4
@@ -298,7 +299,7 @@ jobs:
           echo "DEB_NAME=${DEB_NAME}" >> $GITHUB_ENV
 
       - name: 📤 上传构建产物
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: caddy-${{ matrix.TARGET }}
           path: |
@@ -526,16 +527,17 @@ jobs:
 
       - name: 📝 生成 Release Notes
         run: |
+          BUILD_TIME=$(TZ=Asia/Shanghai date '+%Y年%m月%d日 %H:%M:%S')
           VER="${{ needs.check.outputs.tag }}"
-          VER_CLEAN="${VER#v}"
           FINGERPRINT="${{ steps.gpg_setup.outputs.fingerprint }}"
+          REPO="${{ github.repository }}"
 
-          cat > /tmp/release-notes.md << RELEOF
+          cat > /tmp/release-notes.md << 'RELEOF'
           ## 📥 Caddy 多架构自编译固件发布
 
-          > 📌 **编译完成时间**：`$(TZ=Asia/Shanghai date '+%Y年%m月%d日 %H:%M:%S')`
-          > 🏷️ **集成内核版本**：`${VER}`
-          > 🔑 **GPG 指纹**：`${FINGERPRINT:-未签名}`
+          > 📌 **编译完成时间**：`__BUILD_TIME__`
+          > 🏷️ **集成内核版本**：`__VER__`
+          > 🔑 **GPG 指纹**：`__FINGERPRINT__`
 
           ---
 
@@ -543,15 +545,15 @@ jobs:
 
           ```bash
           # 1. 下载并安装 GPG 密钥环
-          curl -fsSL https://github.com/${{ github.repository }}/releases/latest/download/caddy-archive-keyring.gpg | \\
+          curl -fsSL https://github.com/__REPO__/releases/latest/download/caddy-archive-keyring.gpg | \
             sudo tee /usr/share/keyrings/caddy-archive-keyring.gpg > /dev/null
 
           # 2. 添加 APT 源 (DEB822 格式)
           echo "Types: deb
-          URIs: https://github.com/${{ github.repository }}/releases/latest/download/
+          URIs: https://github.com/__REPO__/releases/latest/download/
           Suites: stable
           Components: main
-          Signed-By: /usr/share/keyrings/caddy-archive-keyring.gpg" | \\
+          Signed-By: /usr/share/keyrings/caddy-archive-keyring.gpg" | \
             sudo tee /etc/apt/sources.list.d/caddy.sources
 
           # 3. 安装 Caddy
@@ -563,16 +565,16 @@ jobs:
           sudo systemctl enable caddy
           ```
 
-          > 📖 **说明**: 本 APT 仓库的所有元数据与 deb 包均通过 GitHub Releases 直接提供。安装密钥环后，\`apt update\` 即可自动获取更新。
+          > 📖 **说明**: 本 APT 仓库的所有元数据与 deb 包均通过 GitHub Releases 直接提供。安装密钥环后，`apt update` 即可自动获取更新。
 
           ---
 
           ### 💡 文件说明
-          - 带 \`-upx\` 后缀的固件为 **UPX (LZMA)** 深度压缩版，体积更小，适合嵌入式设备
+          - 带 `-upx` 后缀的固件为 **UPX (LZMA)** 深度压缩版，体积更小，适合嵌入式设备
           - 常规无后缀固件为原生编译版，执行效率最佳
-          - \`.deb\` 安装包可直接通过 APT 或 \`dpkg -i\` 安装
-          - \`InRelease\` / \`Release.gpg\` — GPG 签名文件，用于 APT 安全验证
-          - \`caddy-archive-keyring.gpg\` — APT 公钥密钥环
+          - `.deb` 安装包可直接通过 APT 或 `dpkg -i` 安装
+          - `InRelease` / `Release.gpg` — GPG 签名文件，用于 APT 安全验证
+          - `caddy-archive-keyring.gpg` — APT 公钥密钥环
 
           ### 🧩 本版集成扩展插件列表
           1. 📁 **[caddy-webdav](https://github.com/mholt/caddy-webdav)** — 全功能 WebDAV 服务端原生支持
@@ -595,6 +597,11 @@ jobs:
 
           📬 *有关于内核更迭的详细改动细节，请参阅 [Caddy 官方发布日志](https://github.com/caddyserver/caddy/releases)。*
           RELEOF
+
+          sed -i "s/__BUILD_TIME__/${BUILD_TIME}/g" /tmp/release-notes.md
+          sed -i "s/__VER__/${VER}/g" /tmp/release-notes.md
+          sed -i "s/__FINGERPRINT__/${FINGERPRINT:-未签名}/g" /tmp/release-notes.md
+          sed -i "s|__REPO__|${REPO}|g" /tmp/release-notes.md
 
           echo "✅ Release Notes 已生成"
 
