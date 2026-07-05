@@ -303,7 +303,7 @@ jobs:
         with:
           name: caddy-${{ matrix.TARGET }}
           path: |
-            /opt/caddy/caddy-*
+            /opt/caddy/caddy*
           if-no-files-found: error
 
   # =================================================================
