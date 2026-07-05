@@ -1,5 +1,5 @@
 Package: caddy
-Version: 1:${VER_CLEAN}
+Version: ${VER_CLEAN}-1
 Architecture: ${DEB_ARCH}
 Maintainer: EasyCaddy <easycaddy@build.local>
 Section: web
